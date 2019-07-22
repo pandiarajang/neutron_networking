@@ -134,6 +134,758 @@ WARNING: setting legacy OS_TENANT_NAME to support cli tools.
 
 Neutron networking
 =======================
-8)
+8) List network agent list
+[pganapa2@localhost simple_network]$ openstack network agent list
++--------------------------------------+--------------------+-----------------------+-------------------+-------+-------+---------------------------+
+| ID                                   | Agent Type         | Host                  | Availability Zone | Alive | State | Binary                    |
++--------------------------------------+--------------------+-----------------------+-------------------+-------+-------+---------------------------+
+| 713b813d-dab7-4c91-8b39-08b03cae5d1a | Metadata agent     | localhost.localdomain | None              | :-)   | UP    | neutron-metadata-agent    |
+| 8cc5daa7-2a6d-4d39-9ca9-66ca3d1b8f59 | DHCP agent         | localhost.localdomain | nova              | :-)   | UP    | neutron-dhcp-agent        |
+| 8e72fc7e-2648-41c9-8ced-de5ff2b89561 | L3 agent           | localhost.localdomain | nova              | :-)   | UP    | neutron-l3-agent          |
+| d7307f65-1b82-4a0c-8713-0bb3aae6036d | Open vSwitch agent | localhost.localdomain | None              | :-)   | UP    | neutron-openvswitch-agent |
++--------------------------------------+--------------------+-----------------------+-------------------+-------+-------+---------------------------+
+[pganapa2@localhost simple_network]$
+9) Check Open vSwitch bridges and interfaces
 
+[pganapa2@localhost simple_network]$ sudo ovs-vsctl show
+020e8756-ecd6-4a63-b823-d57a6f768dae
+    Manager "ptcp:6640:127.0.0.1"
+        is_connected: true
+    Bridge br-ex
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port phy-br-ex
+            Interface phy-br-ex
+                type: patch
+                options: {peer=int-br-ex}
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-int
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port "qr-68214bab-db"
+            tag: 1
+            Interface "qr-68214bab-db"
+                type: internal
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port "tap5449cdd0-c2"
+            tag: 1
+            Interface "tap5449cdd0-c2"
+                type: internal
+        Port "tapb890ec33-1c"
+            tag: 3
+            Interface "tapb890ec33-1c"
+        Port "tap896686b2-50"
+            tag: 3
+            Interface "tap896686b2-50"
+                type: internal
+        Port int-br-ex
+            Interface int-br-ex
+                type: patch
+                options: {peer=phy-br-ex}
+        Port "qg-b010fa4c-50"
+            tag: 2
+            Interface "qg-b010fa4c-50"
+                type: internal
+        Port "qg-c40d8dea-3e"
+            tag: 2
+            Interface "qg-c40d8dea-3e"
+                type: internal
+        Port "qr-2b19a71f-c0"
+            tag: 1
+            Interface "qr-2b19a71f-c0"
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "qr-ae4fb86e-64"
+            tag: 3
+            Interface "qr-ae4fb86e-64"
+                type: internal
+    Bridge br-tun
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port br-tun
+            Interface br-tun
+                type: internal
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+    ovs_version: "2.11.0"
+    
+10) Create network simplenetwork1 
+[pganapa2@localhost simple_network]$ openstack network create --project simplenetworkproject simplenetwork1
++---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                     | Value                                                                                                                                                                               |
++---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up            | UP                                                                                                                                                                                  |
+| availability_zone_hints   |                                                                                                                                                                                     |
+| availability_zones        |                                                                                                                                                                                     |
+| created_at                | 2019-07-17T14:45:06Z                                                                                                                                                                |
+| description               |                                                                                                                                                                                     |
+| dns_domain                | None                                                                                                                                                                                |
+| id                        | 90f88955-c686-4d9e-b52b-7b715106bcad                                                                                                                                                |
+| ipv4_address_scope        | None                                                                                                                                                                                |
+| ipv6_address_scope        | None                                                                                                                                                                                |
+| is_default                | False                                                                                                                                                                               |
+| is_vlan_transparent       | None                                                                                                                                                                                |
+| location                  | Munch({'project': Munch({'domain_id': None, 'id': u'8dfce76d7e6548afba9f25640ed05020', 'name': None, 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| mtu                       | 1450                                                                                                                                                                                |
+| name                      | simplenetwork1                                                                                                                                                                      |
+| port_security_enabled     | True                                                                                                                                                                                |
+| project_id                | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                    |
+| provider:network_type     | vxlan                                                                                                                                                                               |
+| provider:physical_network | None                                                                                                                                                                                |
+| provider:segmentation_id  | 80                                                                                                                                                                                  |
+| qos_policy_id             | None                                                                                                                                                                                |
+| revision_number           | 1                                                                                                                                                                                   |
+| router:external           | Internal                                                                                                                                                                            |
+| segments                  | None                                                                                                                                                                                |
+| shared                    | False                                                                                                                                                                               |
+| status                    | ACTIVE                                                                                                                                                                              |
+| subnets                   |                                                                                                                                                                                     |
+| tags                      |                                                                                                                                                                                     |
+| updated_at                | 2019-07-17T14:45:07Z                                                                                                                                                                |
++---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+11) Create subnet02 with range 10.5.7.0/24 and dns server 8.8.8.8
+[pganapa2@localhost simple_network]$ openstack subnet create subnet02 --subnet-range 10.5.7.0/24 --dns-nameserver 8.8.8.8 --network simplenetwork1
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                       |
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 10.5.7.2-10.5.7.254                                                                                                                                                                         |
+| cidr              | 10.5.7.0/24                                                                                                                                                                                 |
+| created_at        | 2019-07-17T14:47:20Z                                                                                                                                                                        |
+| description       |                                                                                                                                                                                             |
+| dns_nameservers   | 8.8.8.8                                                                                                                                                                                     |
+| enable_dhcp       | True                                                                                                                                                                                        |
+| gateway_ip        | 10.5.7.1                                                                                                                                                                                    |
+| host_routes       |                                                                                                                                                                                             |
+| id                | e0589ec9-418d-41be-a9f4-6c8c0def2a72                                                                                                                                                        |
+| ip_version        | 4                                                                                                                                                                                           |
+| ipv6_address_mode | None                                                                                                                                                                                        |
+| ipv6_ra_mode      | None                                                                                                                                                                                        |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'4b1ca7a7fdbe4a71968340dd1b88b448', 'name': 'admin', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | subnet02                                                                                                                                                                                    |
+| network_id        | 90f88955-c686-4d9e-b52b-7b715106bcad                                                                                                                                                        |
+| prefix_length     | None                                                                                                                                                                                        |
+| project_id        | 4b1ca7a7fdbe4a71968340dd1b88b448                                                                                                                                                            |
+| revision_number   | 0                                                                                                                                                                                           |
+| segment_id        | None                                                                                                                                                                                        |
+| service_types     |                                                                                                                                                                                             |
+| subnetpool_id     | None                                                                                                                                                                                        |
+| tags              |                                                                                                                                                                                             |
+| updated_at        | 2019-07-17T14:47:20Z                                                                                                                                                                        |
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+12) ping 10.5.7.2 ip from newly created network namesapce
+[pganapa2@localhost simple_network]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.2
+PING 10.5.7.2 (10.5.7.2) 56(84) bytes of data.
+64 bytes from 10.5.7.2: icmp_seq=1 ttl=64 time=0.110 ms
+64 bytes from 10.5.7.2: icmp_seq=2 ttl=64 time=0.317 ms
+64 bytes from 10.5.7.2: icmp_seq=3 ttl=64 time=0.379 ms
+64 bytes from 10.5.7.2: icmp_seq=4 ttl=64 time=0.201 ms
+^C
+--- 10.5.7.2 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3010ms
+rtt min/avg/max/mdev = 0.110/0.251/0.379/0.105 ms
+[pganapa2@localhost simple_network]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ip address show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+19: tapb5bd943f-14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether fa:16:3e:cf:1c:19 brd ff:ff:ff:ff:ff:ff
+    inet 10.5.7.2/24 brd 10.5.7.255 scope global tapb5bd943f-14
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fecf:1c19/64 scope link
+       valid_lft forever preferred_lft forever
+[pganapa2@localhost simple_network]$
+
+13) Check Open vSwitch bridges and interfaces for newly created dhcp interface under br-int.
+[pganapa2@localhost simple_network]$ sudo ovs-vsctl show
+020e8756-ecd6-4a63-b823-d57a6f768dae
+    Manager "ptcp:6640:127.0.0.1"
+        is_connected: true
+    Bridge br-ex
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port phy-br-ex
+            Interface phy-br-ex
+                type: patch
+                options: {peer=int-br-ex}
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-int
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port "qr-c2ecddbb-e9"
+            tag: 4
+            Interface "qr-c2ecddbb-e9"
+                type: internal
+        Port "qr-68214bab-db"
+            tag: 1
+            Interface "qr-68214bab-db"
+                type: internal
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port "tap5449cdd0-c2"
+            tag: 1
+            Interface "tap5449cdd0-c2"
+                type: internal
+        Port "tapb890ec33-1c"
+            tag: 3
+            Interface "tapb890ec33-1c"
+        Port "tap896686b2-50"
+            tag: 3
+            Interface "tap896686b2-50"
+                type: internal
+        Port int-br-ex
+            Interface int-br-ex
+                type: patch
+                options: {peer=phy-br-ex}
+        Port "tapb5bd943f-14"
+            tag: 5
+            Interface "tapb5bd943f-14" ===> new DHCP interface added for subnet02 
+                type: internal
+        Port "qg-b010fa4c-50"
+            tag: 2
+            Interface "qg-b010fa4c-50"
+                type: internal
+        Port "qg-c40d8dea-3e"
+            tag: 2
+            Interface "qg-c40d8dea-3e"
+                type: internal
+        Port "qr-2b19a71f-c0"
+            tag: 1
+            Interface "qr-2b19a71f-c0"
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "tap9343c53c-19"
+            tag: 4
+            Interface "tap9343c53c-19"
+                type: internal
+        Port "qr-ae4fb86e-64"
+            tag: 3
+            Interface "qr-ae4fb86e-64"
+                type: internal
+    Bridge br-tun
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port br-tun
+            Interface br-tun
+                type: internal
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+    ovs_version: "2.11.0"
+14) List routers and add router R4 for simplenetwork1's external connectivity.
+[pganapa2@localhost simple_network]$ openstack router list
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| ID                                   | Name    | Status | State | Project                          | Distributed | HA    |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| 37cf7f19-746f-4d1f-aba6-04d4a59a5426 | R2      | ACTIVE | UP    | 4b1ca7a7fdbe4a71968340dd1b88b448 | False       | False |
+| 3b7ef7ba-2560-459f-8338-a77bedc0482e | router1 | ACTIVE | UP    | 636ae43cd22043af908dc3b2e3a8709f | False       | False |
+| dc686791-620b-454b-b236-f9213f86d795 | R3      | ACTIVE | UP    | 4b1ca7a7fdbe4a71968340dd1b88b448 | False       | False |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+[pganapa2@localhost simple_network]$ openstack router create R4
++-------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                       |
++-------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                          |
+| availability_zone_hints |                                                                                                                                                                                             |
+| availability_zones      |                                                                                                                                                                                             |
+| created_at              | 2019-07-17T14:52:39Z                                                                                                                                                                        |
+| description             |                                                                                                                                                                                             |
+| distributed             | False                                                                                                                                                                                       |
+| external_gateway_info   | None                                                                                                                                                                                        |
+| flavor_id               | None                                                                                                                                                                                        |
+| ha                      | False                                                                                                                                                                                       |
+| id                      | 3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e                                                                                                                                                        |
+| location                | Munch({'project': Munch({'domain_id': 'default', 'id': u'4b1ca7a7fdbe4a71968340dd1b88b448', 'name': 'admin', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | R4                                                                                                                                                                                          |
+| project_id              | 4b1ca7a7fdbe4a71968340dd1b88b448                                                                                                                                                            |
+| revision_number         | 1                                                                                                                                                                                           |
+| routes                  |                                                                                                                                                                                             |
+| status                  | ACTIVE                                                                                                                                                                                      |
+| tags                    |                                                                                                                                                                                             |
+| updated_at              | 2019-07-17T14:52:39Z                                                                                                                                                                        |
++-------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+15) Verify Open vSwitch bridge interface details for newly added router interface. 
+[pganapa2@localhost simple_network]$ sudo ovs-vsctl show
+020e8756-ecd6-4a63-b823-d57a6f768dae
+    Manager "ptcp:6640:127.0.0.1"
+        is_connected: true
+    Bridge br-ex
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port phy-br-ex
+            Interface phy-br-ex
+                type: patch
+                options: {peer=int-br-ex}
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-int
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port "qr-c2ecddbb-e9"
+            tag: 4
+            Interface "qr-c2ecddbb-e9"
+                type: internal
+        Port "qr-68214bab-db"
+            tag: 1
+            Interface "qr-68214bab-db"
+                type: internal
+        Port "qr-df475aa6-ba"
+            tag: 5
+            Interface "qr-df475aa6-ba"    ==> interface for router R4 in subnet02 
+                type: internal
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port "tap5449cdd0-c2"
+            tag: 1
+            Interface "tap5449cdd0-c2"
+                type: internal
+        Port "tapb890ec33-1c"
+            tag: 3
+            Interface "tapb890ec33-1c"
+        Port "tap896686b2-50"
+            tag: 3
+            Interface "tap896686b2-50"
+                type: internal
+        Port int-br-ex
+            Interface int-br-ex
+                type: patch
+                options: {peer=phy-br-ex}
+        Port "tapb5bd943f-14"
+            tag: 5
+            Interface "tapb5bd943f-14"
+                type: internal
+        Port "qg-b010fa4c-50"
+            tag: 2
+            Interface "qg-b010fa4c-50"
+                type: internal
+        Port "qg-c40d8dea-3e"
+            tag: 2
+            Interface "qg-c40d8dea-3e"
+                type: internal
+        Port "qr-2b19a71f-c0"
+            tag: 1
+            Interface "qr-2b19a71f-c0"
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "tap9343c53c-19"
+            tag: 4
+            Interface "tap9343c53c-19"
+                type: internal
+        Port "qr-ae4fb86e-64"
+            tag: 3
+            Interface "qr-ae4fb86e-64"
+                type: internal
+    Bridge br-tun
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port br-tun
+            Interface br-tun
+                type: internal
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+    ovs_version: "2.11.0"
+[pganapa2@localhost simple_network]$
+
+16) Check network namespaces and accessiblility for the newly create dhcp and router. 
+[pganapa2@localhost simple_network]$ ip netns
+qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e (id: 6) ==> R4
+qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad (id: 5) ==> simplenetwork1
+qdhcp-04282b72-6106-4649-9727-a066d18ce029 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+
+[pganapa2@localhost simple_network]$ sudo ip netns exec qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e ip a show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+20: qr-df475aa6-ba: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether fa:16:3e:a7:36:01 brd ff:ff:ff:ff:ff:ff
+    inet 10.5.7.1/24 brd 10.5.7.255 scope global qr-df475aa6-ba   ==> ip 10.5.7.1 is added to this router while adding the router to the subnet02 
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fea7:3601/64 scope link
+       valid_lft forever preferred_lft forever
+
+[pganapa2@localhost devstack]$ ip netns
+qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e (id: 6)
+qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad (id: 5)
+qdhcp-04282b72-6106-4649-9727-a066d18ce029 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715                                                                                        106bcad ping 10.5.7.1
+setting the network namespace "qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad" faile                                                                                        d: Operation not permitted
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-                                                                                        7b715106bcad ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+64 bytes from 10.5.7.1: icmp_seq=1 ttl=64 time=1.46 ms
+64 bytes from 10.5.7.1: icmp_seq=2 ttl=64 time=0.138 ms
+64 bytes from 10.5.7.1: icmp_seq=3 ttl=64 time=0.122 ms
+64 bytes from 10.5.7.1: icmp_seq=4 ttl=64 time=0.205 ms
+64 bytes from 10.5.7.1: icmp_seq=5 ttl=64 time=0.466 ms
+64 bytes from 10.5.7.1: icmp_seq=6 ttl=64 time=0.592 ms
+64 bytes from 10.5.7.1: icmp_seq=7 ttl=64 time=0.515 ms
+^C
+--- 10.5.7.1 ping statistics ---
+7 packets transmitted, 7 received, 0% packet loss, time 6009ms
+rtt min/avg/max/mdev = 0.122/0.500/1.468/0.433 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+64 bytes from 10.5.7.1: icmp_seq=1 ttl=64 time=0.099 ms
+64 bytes from 10.5.7.1: icmp_seq=2 ttl=64 time=0.146 ms
+64 bytes from 10.5.7.1: icmp_seq=3 ttl=64 time=0.083 ms
+^C
+--- 10.5.7.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.083/0.109/0.146/0.028 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-04282b72-6106-4649-9727-a066d18ce029 ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+^C
+--- 10.5.7.1 ping statistics ---
+14 packets transmitted, 0 received, 100% packet loss, time 13027ms
+
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+^C
+--- 10.5.7.1 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4001ms
+
+17) Add router R4 to the subnet subnet02
+openstack router add subnet R4 subnet02
+
+18) Add router R4 as gateway to connect simplenetwork1 to public network (174.24.4.0/24) created under admin project. 
+[pganapa2@localhost devstack]$neutron router-gateway-set R4 public
+
+19) Create instance inst01 for cirros image on simplenetwork1
+[pganapa2@localhost devstack]$ openstack server create --image cirros --flavor 2 --nic net-id=90f88955-c686-4d9e-b52b-7b715106bcad inst01
++-------------------------------------+-----------------------------------------------+
+| Field                               | Value                                         |
++-------------------------------------+-----------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                        |
+| OS-EXT-AZ:availability_zone         |                                               |
+| OS-EXT-SRV-ATTR:host                | None                                          |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                          |
+| OS-EXT-SRV-ATTR:instance_name       |                                               |
+| OS-EXT-STS:power_state              | NOSTATE                                       |
+| OS-EXT-STS:task_state               | scheduling                                    |
+| OS-EXT-STS:vm_state                 | building                                      |
+| OS-SRV-USG:launched_at              | None                                          |
+| OS-SRV-USG:terminated_at            | None                                          |
+| accessIPv4                          |                                               |
+| accessIPv6                          |                                               |
+| addresses                           |                                               |
+| adminPass                           | 6T9bqc68vREW                                  |
+| config_drive                        |                                               |
+| created                             | 2019-07-17T16:01:37Z                          |
+| flavor                              | m1.small (2)                                  |
+| hostId                              |                                               |
+| id                                  | 2a4cadeb-8c2b-452e-b5ba-b5a475dac5f2          |
+| image                               | cirros (6350caaf-74a7-4497-bef3-1e694889cbec) |
+| key_name                            | None                                          |
+| name                                | inst01                                        |
+| progress                            | 0                                             |
+| project_id                          | 8dfce76d7e6548afba9f25640ed05020              |
+| properties                          |                                               |
+| security_groups                     | name='default'                                |
+| status                              | BUILD                                         |
+| updated                             | 2019-07-17T16:01:37Z                          |
+| user_id                             | 9a3c2f3cf11a4a1f81dcbbd54d72f578              |
+| volumes_attached                    |                                               |
++-------------------------------------+-----------------------------------------------+
+
+20) Check instance accessibility from dhcp and router namespace.
+[pganapa2@localhost devstack]$ ip netns
+qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e (id: 6)
+qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad (id: 5)
+qdhcp-04282b72-6106-4649-9727-a066d18ce029 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+setting the network namespace "qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad" failed: Operation not permitted
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+PING 10.5.7.245 (10.5.7.245) 56(84) bytes of data.
+^C
+--- 10.5.7.245 ping statistics ---
+15 packets transmitted, 0 received, 100% packet loss, time 14053ms
+
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+64 bytes from 10.5.7.1: icmp_seq=1 ttl=64 time=1.08 ms
+64 bytes from 10.5.7.1: icmp_seq=2 ttl=64 time=0.310 ms
+^C
+--- 10.5.7.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+rtt min/avg/max/mdev = 0.310/0.699/1.089/0.390 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1) 56(84) bytes of data.
+64 bytes from 10.5.7.1: icmp_seq=1 ttl=64 time=0.107 ms
+64 bytes from 10.5.7.1: icmp_seq=2 ttl=64 time=0.077 ms
+64 bytes from 10.5.7.1: icmp_seq=3 ttl=64 time=0.076 ms
+64 bytes from 10.5.7.1: icmp_seq=4 ttl=64 time=0.095 ms
+64 bytes from 10.5.7.1: icmp_seq=5 ttl=64 time=0.076 ms
+64 bytes from 10.5.7.1: icmp_seq=6 ttl=64 time=0.060 ms
+^C
+--- 10.5.7.1 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, time 5007ms
+rtt min/avg/max/mdev = 0.060/0.081/0.107/0.019 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e ping 10.5.7.245
+PING 10.5.7.245 (10.5.7.245) 56(84) bytes of data.
+^C
+--- 10.5.7.245 ping statistics ---
+6 packets transmitted, 0 received, 100% packet loss, time 5001ms
+
+
+21) check security group for the user and the project to add security rules to enable icmp and ssh to the instance inst01
+[pganapa2@localhost devstack]$ openstack security group list
+openstack project list
++--------------------------------------+---------+------------------------+----------------------------------+------+
+| ID                                   | Name    | Description            | Project                          | Tags |
++--------------------------------------+---------+------------------------+----------------------------------+------+
+| 0c67e331-ba48-4a64-8ca2-03fb1b3e9dd2 | default | Default security group | 636ae43cd22043af908dc3b2e3a8709f | []   |
+| 1e707f8d-0b52-4540-aea4-bd923281cdf9 | default | Default security group | da98690f80664e8cb946398c58953970 | []   |
+| 2a28fe63-1d68-4c2d-8c2b-227c9e07b847 | default | Default security group | 4b1ca7a7fdbe4a71968340dd1b88b448 | []   |
+| 6fe44e99-3a02-40cd-bd8f-1d206af86886 | default | Default security group | acafc8c213b841aaa08a17d8cc608503 | []   |
+| 7ee7d713-f3bf-4485-8688-3e6784f4105d | default | Default security group | 8dfce76d7e6548afba9f25640ed05020 | []   |
+| a54becf4-7536-45e9-b2da-39dd6c9ae688 | default | Default security group |                                  | []   |
++--------------------------------------+---------+------------------------+----------------------------------+------+
+[pganapa2@localhost devstack]$ openstack project list
++----------------------------------+----------------------+
+| ID                               | Name                 |
++----------------------------------+----------------------+
+| 4b1ca7a7fdbe4a71968340dd1b88b448 | admin                |
+| 636ae43cd22043af908dc3b2e3a8709f | demo                 |
+| 77f24af8b40944caaf108d2ea9783579 | alt_demo             |
+| 86da20d002444d928a12148528150713 | firstProject         |
+| 8dfce76d7e6548afba9f25640ed05020 | simplenetworkproject |
+| ac9dabbf6df7415c8c2fbbde5a86b976 | newproject           |
+| d0dee4d0e76d4c33b9a6b0e19c0d9dd5 | invisible_to_admin   |
+| da98690f80664e8cb946398c58953970 | service              |
++----------------------------------+----------------------+
+
+
+[pganapa2@localhost devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --protocol icmp --ingress 7ee7d713-f3bf-4485-8688-3e6784f4105d
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                      |
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at        | 2019-07-17T16:11:59Z                                                                                                                                                                                       |
+| description       |                                                                                                                                                                                                            |
+| direction         | ingress                                                                                                                                                                                                    |
+| ether_type        | IPv4                                                                                                                                                                                                       |
+| id                | 7763cb0e-44d6-4bef-9be3-02f9d741fefa                                                                                                                                                                       |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'8dfce76d7e6548afba9f25640ed05020', 'name': 'simplenetworkproject', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | None                                                                                                                                                                                                       |
+| port_range_max    | None                                                                                                                                                                                                       |
+| port_range_min    | None                                                                                                                                                                                                       |
+| project_id        | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                                           |
+| protocol          | icmp                                                                                                                                                                                                       |
+| remote_group_id   | None                                                                                                                                                                                                       |
+| remote_ip_prefix  | 0.0.0.0/0                                                                                                                                                                                                  |
+| revision_number   | 0                                                                                                                                                                                                          |
+| security_group_id | 7ee7d713-f3bf-4485-8688-3e6784f4105d                                                                                                                                                                       |
+| tags              | []                                                                                                                                                                                                         |
+| updated_at        | 2019-07-17T16:11:59Z                                                                                                                                                                                       |
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dst-port 22 --protocol tcp --ingress 7ee7d713-f3bf-4485-8688-3e6784f4105d
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                      |
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at        | 2019-07-17T16:12:50Z                                                                                                                                                                                       |
+| description       |                                                                                                                                                                                                            |
+| direction         | ingress                                                                                                                                                                                                    |
+| ether_type        | IPv4                                                                                                                                                                                                       |
+| id                | 19b8c783-42a7-4d5c-933a-8efd86f3e9a8                                                                                                                                                                       |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'8dfce76d7e6548afba9f25640ed05020', 'name': 'simplenetworkproject', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | None                                                                                                                                                                                                       |
+| port_range_max    | 22                                                                                                                                                                                                         |
+| port_range_min    | 22                                                                                                                                                                                                         |
+| project_id        | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                                           |
+| protocol          | tcp                                                                                                                                                                                                        |
+| remote_group_id   | None                                                                                                                                                                                                       |
+| remote_ip_prefix  | 0.0.0.0/0                                                                                                                                                                                                  |
+| revision_number   | 0                                                                                                                                                                                                          |
+| security_group_id | 7ee7d713-f3bf-4485-8688-3e6784f4105d                                                                                                                                                                       |
+| tags              | []                                                                                                                                                                                                         |
+| updated_at        | 2019-07-17T16:12:50Z                                                                                                                                                                                       |
++-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+22) Check instance accessibility from dhcp and router namespace after adding security rules. 
+[pganapa2@localhost devstack]$ ip netns
+qrouter-3ff4f7f9-6155-43c0-8ce3-49eea60fcc2e (id: 6)
+qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad (id: 5)
+qdhcp-04282b72-6106-4649-9727-a066d18ce029 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ ip netns qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+Command "qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad" is unknown, try "ip netns help".
+[pganapa2@localhost devstack]$ sudo ip netns qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+Command "qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad" is unknown, try "ip netns help".
+[pganapa2@localhost devstack]$ ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+setting the network namespace "qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad" failed: Operation not permitted
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ping 10.5.7.245
+PING 10.5.7.245 (10.5.7.245) 56(84) bytes of data.
+64 bytes from 10.5.7.245: icmp_seq=1 ttl=64 time=8.01 ms
+64 bytes from 10.5.7.245: icmp_seq=2 ttl=64 time=2.17 ms
+64 bytes from 10.5.7.245: icmp_seq=3 ttl=64 time=6.27 ms
+64 bytes from 10.5.7.245: icmp_seq=4 ttl=64 time=3.00 ms
+64 bytes from 10.5.7.245: icmp_seq=5 ttl=64 time=2.60 ms
+^C
+--- 10.5.7.245 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4007ms
+rtt min/avg/max/mdev = 2.178/4.414/8.019/2.312 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-90f88955-c686-4d9e-b52b-7b715106bcad ssh cirros@10.5.7.245
+The authenticity of host '10.5.7.245 (10.5.7.245)' can't be established.
+ECDSA key fingerprint is SHA256:3/YuN5iN2hlt9l0XZGW7RMuZ6bRYVOyqYDUZ4Pwh5fo.
+ECDSA key fingerprint is MD5:c7:12:ac:57:04:66:ca:85:33:d5:73:b0:d0:09:a3:d1.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.5.7.245' (ECDSA) to the list of known hosts.
+cirros@10.5.7.245's password:
+$ ping 10.5.7.1
+PING 10.5.7.1 (10.5.7.1): 56 data bytes
+64 bytes from 10.5.7.1: seq=0 ttl=64 time=14.709 ms
+64 bytes from 10.5.7.1: seq=1 ttl=64 time=31.927 ms
+64 bytes from 10.5.7.1: seq=2 ttl=64 time=6.047 ms
+64 bytes from 10.5.7.1: seq=3 ttl=64 time=33.117 ms
+
+--- 10.5.7.1 ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 6.047/21.450/33.117 ms
+$
+$ exit
+Connection to 10.5.7.245 closed.
+[pganapa2@localhost devstack]$ ping 10.5.7.245
+PING 10.5.7.245 (10.5.7.245) 56(84) bytes of data.
+^C
+--- 10.5.7.245 ping statistics ---
+8 packets transmitted, 0 received, 100% packet loss, time 7006ms
+
+[pganapa2@localhost devstack]
+
+
+Assigning floating ip
+==============================
+
+23)  Create a floating ip on the public-subnet to assign it to inst01, So that inst01 can be accessed outside simplenetwork1 using the floating ip in public network. 
+
+[pganapa2@localhost devstack]$ openstack subnet list
+openstack floati+--------------------------------------+---------------------+--------------------------------------+---------------------+
+| ID                                   | Name                | Network                              | Subnet              |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| 07a9ea51-b036-440c-a41a-644c6783039b | private-subnet      | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | 10.0.0.0/26         |
+| 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 | ipv6-private-subnet | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | fdd7:ab0f:8a34::/64 |
+| 614b2734-2748-48b4-9774-85214a760341 | ipv6-public-subnet  | ee6533cd-a952-470d-b71e-26508cbe5e9f | 2001:db8::/64       |
+| 7a6a556c-eb38-45b0-b18e-079ffe5abeca | public-subnet       | ee6533cd-a952-470d-b71e-26508cbe5e9f | 172.24.4.0/24       |
+| acd372cc-f325-4eaf-b8e5-76cd183417c3 | subnet01            | 04282b72-6106-4649-9727-a066d18ce029 | 10.5.6.0/24         |
+| d73323bf-2028-4453-81b0-2c50824e7509 | subnet1             | 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | 10.5.5.0/24         |
+| e0589ec9-418d-41be-a9f4-6c8c0def2a72 | subnet02            | 90f88955-c686-4d9e-b52b-7b715106bcad | 10.5.7.0/24         |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+ng[pganapa2@localhost devstack]$ openstack floating ip create --subnet 7a6a556c-eb38-45b0-b18e-079ffe5abeca ee6533cd-a952-470d-b71e-26508cbe5e9f
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field               | Value                                                                                                                                                                                                      |
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at          | 2019-07-17T16:21:34Z                                                                                                                                                                                       |
+| description         |                                                                                                                                                                                                            |
+| dns_domain          | None                                                                                                                                                                                                       |
+| dns_name            | None                                                                                                                                                                                                       |
+| fixed_ip_address    | None                                                                                                                                                                                                       |
+| floating_ip_address | 172.24.4.225                                                                                                                                                                                               |
+| floating_network_id | ee6533cd-a952-470d-b71e-26508cbe5e9f                                                                                                                                                                       |
+| id                  | 6008d9a9-48a6-40e8-91f4-2615d266005c                                                                                                                                                                       |
+| location            | Munch({'project': Munch({'domain_id': 'default', 'id': u'8dfce76d7e6548afba9f25640ed05020', 'name': 'simplenetworkproject', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                | 172.24.4.225                                                                                                                                                                                               |
+| port_details        | None                                                                                                                                                                                                       |
+| port_id             | None                                                                                                                                                                                                       |
+| project_id          | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                                           |
+| qos_policy_id       | None                                                                                                                                                                                                       |
+| revision_number     | 0                                                                                                                                                                                                          |
+| router_id           | None                                                                                                                                                                                                       |
+| status              | DOWN                                                                                                                                                                                                       |
+| subnet_id           | 7a6a556c-eb38-45b0-b18e-079ffe5abeca                                                                                                                                                                       |
+| tags                | []                                                                                                                                                                                                         |
+| updated_at          | 2019-07-17T16:21:34Z                                                                                                                                                                                       |
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+24) Add floating ip to inst01
+
+[pganapa2@localhost devstack]$ openstack server add floating ip inst01 172.24.4.225
+[pganapa2@localhost devstack]$
+
+24) Access inst01 using floating ip 172.24.4.225
+[pganapa2@localhost devstack]$ ping 172.24.4.225
+PING 172.24.4.225 (172.24.4.225) 56(84) bytes of data.
+64 bytes from 172.24.4.225: icmp_seq=1 ttl=63 time=5.87 ms
+64 bytes from 172.24.4.225: icmp_seq=2 ttl=63 time=4.76 ms
+64 bytes from 172.24.4.225: icmp_seq=3 ttl=63 time=2.02 ms
+^C
+--- 172.24.4.225 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 2.024/4.219/5.871/1.617 ms
+[pganapa2@localhost devstack]$ ssh cirros@172.24.4.225
+The authenticity of host '172.24.4.225 (172.24.4.225)' can't be established.
+ECDSA key fingerprint is SHA256:3/YuN5iN2hlt9l0XZGW7RMuZ6bRYVOyqYDUZ4Pwh5fo.
+ECDSA key fingerprint is MD5:c7:12:ac:57:04:66:ca:85:33:d5:73:b0:d0:09:a3:d1.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.24.4.225' (ECDSA) to the list of known hosts.
+cirros@172.24.4.225's password:
+$ ip a s
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc pfifo_fast qlen 1000
+    link/ether fa:16:3e:50:42:13 brd ff:ff:ff:ff:ff:ff
+    inet 10.5.7.245/24 brd 10.5.7.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fe50:4213/64 scope link
+       valid_lft forever preferred_lft forever
+$
 
