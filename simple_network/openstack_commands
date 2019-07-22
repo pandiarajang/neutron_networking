@@ -1,0 +1,139 @@
+
+Keystone
+============
+       
+1) Create simplenetworkproject
+[pganapa2@localhost simple_network]$ source ../../devstack/openrc admin admin
+WARNING: setting legacy OS_TENANT_NAME to support cli tools.
+[pganapa2@localhost simple_network]$ openstack project create simplenetworkproject
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description |                                  |
+| domain_id   | default                          |
+| enabled     | True                             |
+| id          | 8dfce76d7e6548afba9f25640ed05020 |
+| is_domain   | False                            |
+| name        | simplenetworkproject             |
+| parent_id   | default                          |
+| tags        | []                               |
++-------------+----------------------------------+
+2) Modify the project to add description
+[pganapa2@localhost simple_network]$ openstack project set --description "Create a cirros instance and simple network to connect the instance to the public network" simplenetworkproject
+[pganapa2@localhost simple_network]$ openstack project show simplenetworkproject
++-------------+-------------------------------------------------------------------------------------------+
+| Field       | Value                                                                                     |
++-------------+-------------------------------------------------------------------------------------------+
+| description | Create a cirros instance and simple network to connect the instance to the public network |
+| domain_id   | default                                                                                   |
+| enabled     | True                                                                                      |
+| id          | 8dfce76d7e6548afba9f25640ed05020                                                          |
+| is_domain   | False                                                                                     |
+| name        | simplenetworkproject                                                                      |
+| parent_id   | default                                                                                   |
+| tags        | []                                                                                        |
++-------------+-------------------------------------------------------------------------------------------+
+3) Create user account networkadmin01 for the project
+[pganapa2@localhost simple_network]$ openstack user create --project simplenetworkproject --password-prompt networkadmin01
+User Password:
+Repeat User Password:
+The passwords entered were not the same
+User Password:
+Repeat User Password:
++---------------------+----------------------------------+
+| Field               | Value                            |
++---------------------+----------------------------------+
+| default_project_id  | 8dfce76d7e6548afba9f25640ed05020 |
+| domain_id           | default                          |
+| enabled             | True                             |
+| id                  | 9a3c2f3cf11a4a1f81dcbbd54d72f578 |
+| name                | networkadmin01                   |
+| options             | {}                               |
+| password_expires_at | None                             |
++---------------------+----------------------------------+
+4) Check for user role and add new roles to the user
+[pganapa2@localhost simple_network]$ openstack role assignment list --project simplenetworkproject --user networkadmin01
+
+[pganapa2@localhost simple_network]$
+
+[pganapa2@localhost simple_network]$ openstack role add --project simplenetworkproject --user networkadmin01 admin
+[pganapa2@localhost simple_network]$ openstack role add --project simplenetworkproject --user networkadmin01 member
+[pganapa2@localhost simple_network]$ openstack role assignment list --project simplenetworkproject --user networkadmin01
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| Role                             | User                             | Group | Project                          | Domain | System | Inherited |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| 7b9b879b3cb2457c8acdb21381635a01 | 9a3c2f3cf11a4a1f81dcbbd54d72f578 |       | 8dfce76d7e6548afba9f25640ed05020 |        |        | False     |
+| ec130a73c363460b84ccb1e7cb75c210 | 9a3c2f3cf11a4a1f81dcbbd54d72f578 |       | 8dfce76d7e6548afba9f25640ed05020 |        |        | False     |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+
+Glance
+===========
+5) Download cirros image to host machine
+[pganapa2@localhost simple_network]$ curl -o /home/pganapa2/cirros-0.4.0.img  http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 12.1M  100 12.1M    0     0   191k      0  0:01:04  0:01:04 --:--:--  287k
+
+6)Check for existing images in glance and add new cirros image.
+
+[pganapa2@localhost simple_network]$ source ../../devstack/openrc networkadmin01 simplenetworkproject
+WARNING: setting legacy OS_TENANT_NAME to support cli tools.
+[pganapa2@localhost simple_network]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 6350caaf-74a7-4497-bef3-1e694889cbec | cirros                   | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+
+[pganapa2@localhost simple_network]$ openstack image create --min-disk 2 --private --disk-format qcow2 --file /home/pganapa2/cirros-0.4.0.img cirros-0.4.0
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                      |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| checksum         | 443b7623e27ecf03dc9e01ee93f67afe                                                                                                                                                           |
+| container_format | bare                                                                                                                                                                                       |
+| created_at       | 2019-07-17T13:40:58Z                                                                                                                                                                       |
+| disk_format      | qcow2                                                                                                                                                                                      |
+| file             | /v2/images/34f2e642-af23-4e32-a959-d3cc38cf6cae/file                                                                                                                                       |
+| id               | 34f2e642-af23-4e32-a959-d3cc38cf6cae                                                                                                                                                       |
+| min_disk         | 2                                                                                                                                                                                          |
+| min_ram          | 0                                                                                                                                                                                          |
+| name             | cirros-0.4.0                                                                                                                                                                               |
+| owner            | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                           |
+| properties       | os_hash_algo='sha512', os_hash_value='6513f21e44aa3da349f248188a44bc304a3653a04122d8fb4535423c8e1d14cd6a153f735bb0982e2161b5b5186106570c17a9e58b64dd39390617cd5a350f78', os_hidden='False' |
+| protected        | False                                                                                                                                                                                      |
+| schema           | /v2/schemas/image                                                                                                                                                                          |
+| size             | 12716032                                                                                                                                                                                   |
+| status           | active                                                                                                                                                                                     |
+| tags             |                                                                                                                                                                                            |
+| updated_at       | 2019-07-17T13:40:59Z                                                                                                                                                                       |
+| virtual_size     | None                                                                                                                                                                                       |
+| visibility       | private                                                                                                                                                                                    |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost simple_network]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 6350caaf-74a7-4497-bef3-1e694889cbec | cirros                   | active |
+| 34f2e642-af23-4e32-a959-d3cc38cf6cae | cirros-0.4.0             | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+
+7) Check newly added cirros-0.4.0 is available for admin user
+[pganapa2@localhost simple_network]$ source ../../devstack/openrc admin admin
+WARNING: setting legacy OS_TENANT_NAME to support cli tools.
+[pganapa2@localhost simple_network]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 6350caaf-74a7-4497-bef3-1e694889cbec | cirros                   | active |
+| 34f2e642-af23-4e32-a959-d3cc38cf6cae | cirros-0.4.0             | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[pganapa2@localhost simple_network]$
+
+Neutron networking
+=======================
+8)
+
+
