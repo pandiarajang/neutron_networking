@@ -3,8 +3,15 @@
     Installation package : devstack
     Openstack version: stein
     
+    
+    
     Simple Network 
     ==============================================================================================
+    
+    Objective: 
+    
+        Creating a simple neutron network with cirros instance and assign floating IP to the instance on the public network.
+    
     Completed Steps: 
     
     Installation: 
