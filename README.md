@@ -10,7 +10,7 @@
     
     Objective: 
     
-        Creating a simple neutron network with cirros instance and assign floating IP to the instance on the public network.
+        Creating a simple neutron network with cirros instance , interconnect the network with public network and assign floating IP.
     
     Completed Steps: 
     
