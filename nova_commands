@@ -1,0 +1,240 @@
+[pganapa2@localhost devstack]$ source openrc networkadmin01 simplenetworkproject
+[pganapa2@localhost devstack]$ openstack flavor list
++----+-----------+-------+------+-----------+-------+-----------+
+| ID | Name      |   RAM | Disk | Ephemeral | VCPUs | Is Public |
++----+-----------+-------+------+-----------+-------+-----------+
+| 1  | m1.tiny   |   512 |    1 |         0 |     1 | True      |
+| 2  | m1.small  |  2048 |   20 |         0 |     1 | True      |
+| 3  | m1.medium |  4096 |   40 |         0 |     2 | True      |
+| 4  | m1.large  |  8192 |   80 |         0 |     4 | True      |
+| 42 | m1.nano   |    64 |    1 |         0 |     1 | True      |
+| 5  | m1.xlarge | 16384 |  160 |         0 |     8 | True      |
+| 84 | m1.micro  |   128 |    1 |         0 |     1 | True      |
+| c1 | cirros256 |   256 |    1 |         0 |     1 | True      |
+| d1 | ds512M    |   512 |    5 |         0 |     1 | True      |
+| d2 | ds1G      |  1024 |   10 |         0 |     1 | True      |
+| d3 | ds2G      |  2048 |   10 |         0 |     2 | True      |
+| d4 | ds4G      |  4096 |   20 |         0 |     4 | True      |
++----+-----------+-------+------+-----------+-------+-----------+
+[pganapa2@localhost devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 6350caaf-74a7-4497-bef3-1e694889cbec | cirros                   | active |
+| 34f2e642-af23-4e32-a959-d3cc38cf6cae | cirros-0.4.0             | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[pganapa2@localhost devstack]$ openstack image show 6350caaf-74a7-4497-bef3-1e694889cbec
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                      |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| checksum         | 443b7623e27ecf03dc9e01ee93f67afe                                                                                                                                                           |
+| container_format | bare                                                                                                                                                                                       |
+| created_at       | 2019-07-17T11:23:48Z                                                                                                                                                                       |
+| disk_format      | qcow2                                                                                                                                                                                      |
+| file             | /v2/images/6350caaf-74a7-4497-bef3-1e694889cbec/file                                                                                                                                       |
+| id               | 6350caaf-74a7-4497-bef3-1e694889cbec                                                                                                                                                       |
+| min_disk         | 2                                                                                                                                                                                          |
+| min_ram          | 0                                                                                                                                                                                          |
+| name             | cirros                                                                                                                                                                                     |
+| owner            | 4b1ca7a7fdbe4a71968340dd1b88b448                                                                                                                                                           |
+| properties       | os_hash_algo='sha512', os_hash_value='6513f21e44aa3da349f248188a44bc304a3653a04122d8fb4535423c8e1d14cd6a153f735bb0982e2161b5b5186106570c17a9e58b64dd39390617cd5a350f78', os_hidden='False' |
+| protected        | False                                                                                                                                                                                      |
+| schema           | /v2/schemas/image                                                                                                                                                                          |
+| size             | 12716032                                                                                                                                                                                   |
+| status           | active                                                                                                                                                                                     |
+| tags             |                                                                                                                                                                                            |
+| updated_at       | 2019-07-17T11:23:51Z                                                                                                                                                                       |
+| virtual_size     | None                                                                                                                                                                                       |
+| visibility       | private                                                                                                                                                                                    |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack network list
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+| ID                                   | Name           | Subnets                                                                    |
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+| 04282b72-6106-4649-9727-a066d18ce029 | simplenetwork  | acd372cc-f325-4eaf-b8e5-76cd183417c3                                       |
+| 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | private        | 07a9ea51-b036-440c-a41a-644c6783039b, 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 |
+| 90f88955-c686-4d9e-b52b-7b715106bcad | simplenetwork1 | e0589ec9-418d-41be-a9f4-6c8c0def2a72                                       |
+| 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | intnet         | d73323bf-2028-4453-81b0-2c50824e7509                                       |
+| ee6533cd-a952-470d-b71e-26508cbe5e9f | public         | 614b2734-2748-48b4-9774-85214a760341, 7a6a556c-eb38-45b0-b18e-079ffe5abeca |
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack compute service list
++----+------------------+-----------------------+----------+---------+-------+----------------------------+
+| ID | Binary           | Host                  | Zone     | Status  | State | Updated At                 |
++----+------------------+-----------------------+----------+---------+-------+----------------------------+
+|  3 | nova-scheduler   | localhost.localdomain | internal | enabled | up    | 2019-07-17T23:26:58.000000 |
+|  5 | nova-consoleauth | localhost.localdomain | internal | enabled | up    | 2019-07-17T23:26:59.000000 |
+|  6 | nova-conductor   | localhost.localdomain | internal | enabled | up    | 2019-07-17T23:27:04.000000 |
+|  1 | nova-conductor   | localhost.localdomain | internal | enabled | up    | 2019-07-17T23:27:05.000000 |
+|  2 | nova-compute     | localhost.localdomain | nova     | enabled | up    | 2019-07-17T23:26:59.000000 |
++----+------------------+-----------------------+----------+---------+-------+----------------------------+
+[pganapa2@localhost devstack]$ openstack keypair list
+
+[pganapa2@localhost devstack]$
+#2) Creating a flavor
+[pganapa2@localhost devstack]$ openstack flavor create --id 10 --ram 256 --disk 2 --public ml.tinier
++----------------------------+-----------+
+| Field                      | Value     |
++----------------------------+-----------+
+| OS-FLV-DISABLED:disabled   | False     |
+| OS-FLV-EXT-DATA:ephemeral  | 0         |
+| disk                       | 2         |
+| id                         | 10        |
+| name                       | ml.tinier |
+| os-flavor-access:is_public | True      |
+| properties                 |           |
+| ram                        | 256       |
+| rxtx_factor                | 1.0       |
+| swap                       |           |
+| vcpus                      | 1         |
++----------------------------+-----------+
+[pganapa2@localhost devstack]$ openstack flavor list
++----+-----------+-------+------+-----------+-------+-----------+
+| ID | Name      |   RAM | Disk | Ephemeral | VCPUs | Is Public |
++----+-----------+-------+------+-----------+-------+-----------+
+| 1  | m1.tiny   |   512 |    1 |         0 |     1 | True      |
+| 10 | ml.tinier |   256 |    2 |         0 |     1 | True      |
+| 2  | m1.small  |  2048 |   20 |         0 |     1 | True      |
+| 3  | m1.medium |  4096 |   40 |         0 |     2 | True      |
+| 4  | m1.large  |  8192 |   80 |         0 |     4 | True      |
+| 42 | m1.nano   |    64 |    1 |         0 |     1 | True      |
+| 5  | m1.xlarge | 16384 |  160 |         0 |     8 | True      |
+| 84 | m1.micro  |   128 |    1 |         0 |     1 | True      |
+| c1 | cirros256 |   256 |    1 |         0 |     1 | True      |
+| d1 | ds512M    |   512 |    5 |         0 |     1 | True      |
+| d2 | ds1G      |  1024 |   10 |         0 |     1 | True      |
+| d3 | ds2G      |  2048 |   10 |         0 |     2 | True      |
+| d4 | ds4G      |  4096 |   20 |         0 |     4 | True      |
++----+-----------+-------+------+-----------+-------+-----------+
+[pganapa2@localhost devstack]$ openstack create -h
+#3) Creating keypair
+[pganapa2@localhost devstack]$ openstack keypair create mykeypair >>mykeypair.key
+[pganapa2@localhost devstack]$ openstack keypair list
++-----------+-------------------------------------------------+
+| Name      | Fingerprint                                     |
++-----------+-------------------------------------------------+
+| mykeypair | 78:cf:7b:68:ec:fb:2e:0b:fe:a1:18:2d:32:87:a0:32 |
++-----------+-------------------------------------------------+
+[pganapa2@localhost devstack]$ ls
+accrc     doc       functions         gate         lib              Makefile       pkg         roles         setup.cfg  stack.sh  tox.ini
+clean.sh  extras.d  functions-common  HACKING.rst  LICENSE          mykeypair.key  playbooks   run_tests.sh  setup.py   tests     unstack.sh
+data      files     FUTURE.rst        inc          MAINTAINERS.rst  openrc         README.rst  samples       stackrc    tools     userrc_early
+[pganapa2@localhost devstack]$ more mykeypair.key
+-----BEGIN RSA PRIVATE KEY-----
+????????????????????????
+????????????????
+>>>>>>>>>>>>>>>>>
+-----END RSA PRIVATE KEY-----
+
+[pganapa2@localhost devstack]$
+#4) creating an image with min-disk 1
+[pganapa2@localhost devstack]$ openstack image create --min-disk 1 --public --disk-format qcow2 --file /home/pganapa2/cirros-0.4.0.img cirros-0.4.0
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                      |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| checksum         | 443b7623e27ecf03dc9e01ee93f67afe                                                                                                                                                           |
+| container_format | bare                                                                                                                                                                                       |
+| created_at       | 2019-07-17T23:51:57Z                                                                                                                                                                       |
+| disk_format      | qcow2                                                                                                                                                                                      |
+| file             | /v2/images/77ec65ca-0b6a-4b93-b1c7-94c6116bce1a/file                                                                                                                                       |
+| id               | 77ec65ca-0b6a-4b93-b1c7-94c6116bce1a                                                                                                                                                       |
+| min_disk         | 1                                                                                                                                                                                          |
+| min_ram          | 0                                                                                                                                                                                          |
+| name             | cirros-0.4.0                                                                                                                                                                               |
+| owner            | 8dfce76d7e6548afba9f25640ed05020                                                                                                                                                           |
+| properties       | os_hash_algo='sha512', os_hash_value='6513f21e44aa3da349f248188a44bc304a3653a04122d8fb4535423c8e1d14cd6a153f735bb0982e2161b5b5186106570c17a9e58b64dd39390617cd5a350f78', os_hidden='False' |
+| protected        | False                                                                                                                                                                                      |
+| schema           | /v2/schemas/image                                                                                                                                                                          |
+| size             | 12716032                                                                                                                                                                                   |
+| status           | active                                                                                                                                                                                     |
+| tags             |                                                                                                                                                                                            |
+| updated_at       | 2019-07-17T23:51:58Z                                                                                                                                                                       |
+| virtual_size     | None                                                                                                                                                                                       |
+| visibility       | public                                                                                                                                                                                     |
++------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+[pganapa2@localhost devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 77ec65ca-0b6a-4b93-b1c7-94c6116bce1a | cirros-0.4.0             | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+
+#5) creatin an instance
+[pganapa2@localhost devstack]$ openstack image list
+openstack network list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 77ec65ca-0b6a-4b93-b1c7-94c6116bce1a | cirros-0.4.0             | active |
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[pganapa2@localhost devstack]$ openstack network list
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+| ID                                   | Name           | Subnets                                                                    |
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+| 04282b72-6106-4649-9727-a066d18ce029 | simplenetwork  | acd372cc-f325-4eaf-b8e5-76cd183417c3                                       |
+| 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | private        | 07a9ea51-b036-440c-a41a-644c6783039b, 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 |
+| 90f88955-c686-4d9e-b52b-7b715106bcad | simplenetwork1 | e0589ec9-418d-41be-a9f4-6c8c0def2a72                                       |
+| 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | intnet         | d73323bf-2028-4453-81b0-2c50824e7509                                       |
+| ee6533cd-a952-470d-b71e-26508cbe5e9f | public         | 614b2734-2748-48b4-9774-85214a760341, 7a6a556c-eb38-45b0-b18e-079ffe5abeca |
++--------------------------------------+----------------+----------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack flavor list
++----+-----------+-------+------+-----------+-------+-----------+
+| ID | Name      |   RAM | Disk | Ephemeral | VCPUs | Is Public |
++----+-----------+-------+------+-----------+-------+-----------+
+| 1  | m1.tiny   |   512 |    1 |         0 |     1 | True      |
+| 10 | ml.tinier |   256 |    2 |         0 |     1 | True      |
+| 2  | m1.small  |  2048 |   20 |         0 |     1 | True      |
+| 3  | m1.medium |  4096 |   40 |         0 |     2 | True      |
+| 4  | m1.large  |  8192 |   80 |         0 |     4 | True      |
+| 42 | m1.nano   |    64 |    1 |         0 |     1 | True      |
+| 5  | m1.xlarge | 16384 |  160 |         0 |     8 | True      |
+| 84 | m1.micro  |   128 |    1 |         0 |     1 | True      |
+| c1 | cirros256 |   256 |    1 |         0 |     1 | True      |
+| d1 | ds512M    |   512 |    5 |         0 |     1 | True      |
+| d2 | ds1G      |  1024 |   10 |         0 |     1 | True      |
+| d3 | ds2G      |  2048 |   10 |         0 |     2 | True      |
+| d4 | ds4G      |  4096 |   20 |         0 |     4 | True      |
++----+-----------+-------+------+-----------+-------+-----------+
+[pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0 --key-name mykeypair --flavor c1 --nic net-id=90f88955-c686-4d9e-b52b-7b715106bcad inst01
++-------------------------------------+-----------------------------------------------------+
+| Field                               | Value                                               |
++-------------------------------------+-----------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                              |
+| OS-EXT-AZ:availability_zone         |                                                     |
+| OS-EXT-SRV-ATTR:host                | None                                                |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                |
+| OS-EXT-SRV-ATTR:instance_name       |                                                     |
+| OS-EXT-STS:power_state              | NOSTATE                                             |
+| OS-EXT-STS:task_state               | scheduling                                          |
+| OS-EXT-STS:vm_state                 | building                                            |
+| OS-SRV-USG:launched_at              | None                                                |
+| OS-SRV-USG:terminated_at            | None                                                |
+| accessIPv4                          |                                                     |
+| accessIPv6                          |                                                     |
+| addresses                           |                                                     |
+| adminPass                           | j6tjV5p9eqi9                                        |
+| config_drive                        |                                                     |
+| created                             | 2019-07-17T23:56:18Z                                |
+| flavor                              | cirros256 (c1)                                      |
+| hostId                              |                                                     |
+| id                                  | f5ea7016-1a41-4017-9502-63e912b1fe10                |
+| image                               | cirros-0.4.0 (77ec65ca-0b6a-4b93-b1c7-94c6116bce1a) |
+| key_name                            | mykeypair                                           |
+| name                                | inst01                                              |
+| progress                            | 0                                                   |
+| project_id                          | 8dfce76d7e6548afba9f25640ed05020                    |
+| properties                          |                                                     |
+| security_groups                     | name='default'                                      |
+| status                              | BUILD                                               |
+| updated                             | 2019-07-17T23:56:19Z                                |
+| user_id                             | 9a3c2f3cf11a4a1f81dcbbd54d72f578                    |
+| volumes_attached                    |                                                     |
++-------------------------------------+-----------------------------------------------------+
+
+
+
+
+
