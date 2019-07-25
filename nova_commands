@@ -234,7 +234,817 @@ openstack network list
 | volumes_attached                    |                                                     |
 +-------------------------------------+-----------------------------------------------------+
 
+[pganapa2@localhost devstack]$ openstack user create --project networkproject02 --password-prompt networkadmin01
+User Password:
+Repeat User Password:
++---------------------+----------------------------------+
+| Field               | Value                            |
++---------------------+----------------------------------+
+| default_project_id  | 699cad07cbb647d892aa9b1f97b1cda2 |
+| domain_id           | default                          |
+| enabled             | True                             |
+| id                  | 4d3de192db794852ac1e9298dbb1725f |
+| name                | networkadmin01                   |
+| options             | {}                               |
+| password_expires_at | None                             |
++---------------------+----------------------------------+
+[pganapa2@localhost devstack]$ openstack role assignment list --project networkproject02 --user networkadmin01
+
+[pganapa2@localhost devstack]$ openstack role add --project networkproject02 --user networkadmin01 admin
+[pganapa2@localhost devstack]$ openstack role add --project networkproject02 --user networkadmin01 member
+[pganapa2@localhost devstack]$ openstack role assignment list --project networkproject02 --user networkadmin01
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| Role                             | User                             | Group | Project                          | Domain | System | Inherited |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| 7b9b879b3cb2457c8acdb21381635a01 | 4d3de192db794852ac1e9298dbb1725f |       | 699cad07cbb647d892aa9b1f97b1cda2 |        |        | False     |
+| ec130a73c363460b84ccb1e7cb75c210 | 4d3de192db794852ac1e9298dbb1725f |       | 699cad07cbb647d892aa9b1f97b1cda2 |        |        | False     |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
 
 
+[pganapa2@localhost devstack]$ openstack network create --project networkproject02 network01
++---------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                     | Value                                                                                                                                                                                                  |
++---------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up            | UP                                                                                                                                                                                                     |
+| availability_zone_hints   |                                                                                                                                                                                                        |
+| availability_zones        |                                                                                                                                                                                                        |
+| created_at                | 2019-07-17T12:20:43Z                                                                                                                                                                                   |
+| description               |                                                                                                                                                                                                        |
+| dns_domain                | None                                                                                                                                                                                                   |
+| id                        | 96da0161-6478-426e-ac27-d406fc8699d7                                                                                                                                                                   |
+| ipv4_address_scope        | None                                                                                                                                                                                                   |
+| ipv6_address_scope        | None                                                                                                                                                                                                   |
+| is_default                | False                                                                                                                                                                                                  |
+| is_vlan_transparent       | None                                                                                                                                                                                                   |
+| location                  | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| mtu                       | 1450                                                                                                                                                                                                   |
+| name                      | network01                                                                                                                                                                                              |
+| port_security_enabled     | True                                                                                                                                                                                                   |
+| project_id                | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| provider:network_type     | vxlan                                                                                                                                                                                                  |
+| provider:physical_network | None                                                                                                                                                                                                   |
+| provider:segmentation_id  | 37                                                                                                                                                                                                     |
+| qos_policy_id             | None                                                                                                                                                                                                   |
+| revision_number           | 1                                                                                                                                                                                                      |
+| router:external           | Internal                                                                                                                                                                                               |
+| segments                  | None                                                                                                                                                                                                   |
+| shared                    | False                                                                                                                                                                                                  |
+| status                    | ACTIVE                                                                                                                                                                                                 |
+| subnets                   |                                                                                                                                                                                                        |
+| tags                      |                                                                                                                                                                                                        |
+| updated_at                | 2019-07-17T12:20:43Z                                                                                                                                                                                   |
++---------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ network ^C
+[pganapa2@localhost devstack]$ openstack subnet list
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| ID                                   | Name                | Network                              | Subnet              |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| 07a9ea51-b036-440c-a41a-644c6783039b | private-subnet      | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | 10.0.0.0/26         |
+| 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 | ipv6-private-subnet | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | fdd7:ab0f:8a34::/64 |
+| 614b2734-2748-48b4-9774-85214a760341 | ipv6-public-subnet  | ee6533cd-a952-470d-b71e-26508cbe5e9f | 2001:db8::/64       |
+| 7a6a556c-eb38-45b0-b18e-079ffe5abeca | public-subnet       | ee6533cd-a952-470d-b71e-26508cbe5e9f | 172.24.4.0/24       |
+| d73323bf-2028-4453-81b0-2c50824e7509 | subnet1             | 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | 10.5.5.0/24         |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+[pganapa2@localhost devstack]$ openstacn subnet create subnet02 --subnet-range 10.5.6.0/24 --dns-nameserver 8.8.8.8 --network network01
+-bash: openstacn: command not found
+[pganapa2@localhost devstack]$ openstack subnet create subnet02 --subnet-range 10.5.6.0/24 --dns-nameserver 8.8.8.8 --network network01
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 10.5.6.2-10.5.6.254                                                                                                                                                                                    |
+| cidr              | 10.5.6.0/24                                                                                                                                                                                            |
+| created_at        | 2019-07-17T12:24:53Z                                                                                                                                                                                   |
+| description       |                                                                                                                                                                                                        |
+| dns_nameservers   | 8.8.8.8                                                                                                                                                                                                |
+| enable_dhcp       | True                                                                                                                                                                                                   |
+| gateway_ip        | 10.5.6.1                                                                                                                                                                                               |
+| host_routes       |                                                                                                                                                                                                        |
+| id                | ee9cd7e1-a11a-48d0-9b70-558fd65ce44e                                                                                                                                                                   |
+| ip_version        | 4                                                                                                                                                                                                      |
+| ipv6_address_mode | None                                                                                                                                                                                                   |
+| ipv6_ra_mode      | None                                                                                                                                                                                                   |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | subnet02                                                                                                                                                                                               |
+| network_id        | 96da0161-6478-426e-ac27-d406fc8699d7                                                                                                                                                                   |
+| prefix_length     | None                                                                                                                                                                                                   |
+| project_id        | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| revision_number   | 0                                                                                                                                                                                                      |
+| segment_id        | None                                                                                                                                                                                                   |
+| service_types     |                                                                                                                                                                                                        |
+| subnetpool_id     | None                                                                                                                                                                                                   |
+| tags              |                                                                                                                                                                                                        |
+| updated_at        | 2019-07-17T12:24:53Z                                                                                                                                                                                   |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstacn subnet create subnet02 --subnet-range 10.5.6.0/24 --dns-nameserver 8.8.8.8 --network network01^C
+[pganapa2@localhost devstack]$ openstack subnet list
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| ID                                   | Name                | Network                              | Subnet              |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| 07a9ea51-b036-440c-a41a-644c6783039b | private-subnet      | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | 10.0.0.0/26         |
+| 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 | ipv6-private-subnet | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | fdd7:ab0f:8a34::/64 |
+| 614b2734-2748-48b4-9774-85214a760341 | ipv6-public-subnet  | ee6533cd-a952-470d-b71e-26508cbe5e9f | 2001:db8::/64       |
+| 7a6a556c-eb38-45b0-b18e-079ffe5abeca | public-subnet       | ee6533cd-a952-470d-b71e-26508cbe5e9f | 172.24.4.0/24       |
+| d73323bf-2028-4453-81b0-2c50824e7509 | subnet1             | 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | 10.5.5.0/24         |
+| ee9cd7e1-a11a-48d0-9b70-558fd65ce44e | subnet02            | 96da0161-6478-426e-ac27-d406fc8699d7 | 10.5.6.0/24         |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+[pganapa2@localhost devstack]$ ip netns
+qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ ip netns exec qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 ping 10.5.6.2
+setting the network namespace "qdhcp-96da0161-6478-426e-ac27-d406fc8699d7" failed: Operation not permitted
+[pganapa2@localhost devstack]$ sudo ip netns exec qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 ping 10.5.6.2
+PING 10.5.6.2 (10.5.6.2) 56(84) bytes of data.
+64 bytes from 10.5.6.2: icmp_seq=1 ttl=64 time=0.083 ms
+64 bytes from 10.5.6.2: icmp_seq=2 ttl=64 time=0.149 ms
+64 bytes from 10.5.6.2: icmp_seq=3 ttl=64 time=0.143 ms
+64 bytes from 10.5.6.2: icmp_seq=4 ttl=64 time=0.149 ms
+64 bytes from 10.5.6.2: icmp_seq=5 ttl=64 time=0.070 ms
+64 bytes from 10.5.6.2: icmp_seq=6 ttl=64 time=0.163 ms
+64 bytes from 10.5.6.2: icmp_seq=7 ttl=64 time=0.143 ms
+^C
+--- 10.5.6.2 ping statistics ---
+7 packets transmitted, 7 received, 0% packet loss, time 6010ms
+rtt min/avg/max/mdev = 0.070/0.128/0.163/0.035 ms
+[pganapa2@localhost devstack]$ openstack router list
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| ID                                   | Name    | Status | State | Project                          | Distributed | HA    |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| 37cf7f19-746f-4d1f-aba6-04d4a59a5426 | R2      | ACTIVE | UP    | 4b1ca7a7fdbe4a71968340dd1b88b448 | False       | False |
+| 3b7ef7ba-2560-459f-8338-a77bedc0482e | router1 | ACTIVE | UP    | 636ae43cd22043af908dc3b2e3a8709f | False       | False |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+[pganapa2@localhost devstack]$ openstack router create R3
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                  |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                     |
+| availability_zone_hints |                                                                                                                                                                                                        |
+| availability_zones      |                                                                                                                                                                                                        |
+| created_at              | 2019-07-17T12:27:47Z                                                                                                                                                                                   |
+| description             |                                                                                                                                                                                                        |
+| distributed             | False                                                                                                                                                                                                  |
+| external_gateway_info   | None                                                                                                                                                                                                   |
+| flavor_id               | None                                                                                                                                                                                                   |
+| ha                      | False                                                                                                                                                                                                  |
+| id                      | 4e210a65-a6a0-49b5-97f5-2fb0c675f68b                                                                                                                                                                   |
+| location                | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | R3                                                                                                                                                                                                     |
+| project_id              | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| revision_number         | 1                                                                                                                                                                                                      |
+| routes                  |                                                                                                                                                                                                        |
+| status                  | ACTIVE                                                                                                                                                                                                 |
+| tags                    |                                                                                                                                                                                                        |
+| updated_at              | 2019-07-17T12:27:47Z                                                                                                                                                                                   |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack router add subnet R4 subnet02
+^CTraceback (most recent call last):
+  File "/bin/openstack", line 7, in <module>
+    from openstackclient.shell import main
+  File "/usr/lib/python2.7/site-packages/openstackclient/__init__.py", line 20, in <module>
+    __version__ = version_info.version_string()
+  File "/usr/lib/python2.7/site-packages/pbr/version.py", line 467, in version_string
+    return self.semantic_version().brief_string()
+  File "/usr/lib/python2.7/site-packages/pbr/version.py", line 462, in semantic_version
+    self._semantic = self._get_version_from_pkg_resources()
+  File "/usr/lib/python2.7/site-packages/pbr/version.py", line 439, in _get_version_from_pkg_resources
+    import pkg_resources
+  File "/usr/lib/python2.7/site-packages/pkg_resources/__init__.py", line 84, in <module>
+    __import__('pkg_resources.extern.packaging.requirements')
+  File "/usr/lib/python2.7/site-packages/pkg_resources/extern/__init__.py", line 43, in load_module
+    __import__(extant)
+  File "/usr/lib/python2.7/site-packages/pkg_resources/_vendor/packaging/requirements.py", line 47, in <module>
+    VERSION_PEP440 = Regex(Specifier._regex_str, re.VERBOSE | re.IGNORECASE)
+  File "/usr/lib/python2.7/site-packages/pkg_resources/_vendor/pyparsing.py", line 2792, in __init__
+    self.re = re.compile(self.pattern, self.flags)
+  File "/usr/lib64/python2.7/re.py", line 190, in compile
+    return _compile(pattern, flags)
+  File "/usr/lib64/python2.7/re.py", line 240, in _compile
+    p = sre_compile.compile(pattern, flags)
+  File "/usr/lib64/python2.7/sre_compile.py", line 499, in compile
+    p = sre_parse.parse(p, flags)
+  File "/usr/lib64/python2.7/sre_parse.py", line 686, in parse
+    p = _parse_sub(source, pattern, 0)
+  File "/usr/lib64/python2.7/sre_parse.py", line 309, in _parse_sub
+    itemsappend(_parse(source, state))
+  File "/usr/lib64/python2.7/sre_parse.py", line 646, in _parse
+    p = _parse_sub(source, state)
+  File "/usr/lib64/python2.7/sre_parse.py", line 309, in _parse_sub
+    itemsappend(_parse(source, state))
+  File "/usr/lib64/python2.7/sre_parse.py", line 646, in _parse
+    p = _parse_sub(source, state)
+  File "/usr/lib64/python2.7/sre_parse.py", line 309, in _parse_sub
+    itemsappend(_parse(source, state))
+  File "/usr/lib64/python2.7/sre_parse.py", line 398, in _parse
+    this = sourceget()
+  File "/usr/lib64/python2.7/sre_parse.py", line 204, in get
+    self.__next()
+  File "/usr/lib64/python2.7/sre_parse.py", line 194, in __next
+    self.index = self.index + len(char)
+KeyboardInterrupt
+[pganapa2@localhost devstack]$ openstack router add subnet R3 subnet02
+[pganapa2@localhost devstack]$ ip netns
+qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ openstack router add subnet R4 subnet02^C
+[pganapa2@localhost devstack]$ openstack subnet list
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| ID                                   | Name                | Network                              | Subnet              |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| 07a9ea51-b036-440c-a41a-644c6783039b | private-subnet      | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | 10.0.0.0/26         |
+| 1f5e5ed4-974d-4b47-87d9-4a2feb1cbf53 | ipv6-private-subnet | 38c449a4-2fd6-409c-aee2-9b91e23b6b9e | fdd7:ab0f:8a34::/64 |
+| 614b2734-2748-48b4-9774-85214a760341 | ipv6-public-subnet  | ee6533cd-a952-470d-b71e-26508cbe5e9f | 2001:db8::/64       |
+| 7a6a556c-eb38-45b0-b18e-079ffe5abeca | public-subnet       | ee6533cd-a952-470d-b71e-26508cbe5e9f | 172.24.4.0/24       |
+| d73323bf-2028-4453-81b0-2c50824e7509 | subnet1             | 9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc | 10.5.5.0/24         |
+| ee9cd7e1-a11a-48d0-9b70-558fd65ce44e | subnet02            | 96da0161-6478-426e-ac27-d406fc8699d7 | 10.5.6.0/24         |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+[pganapa2@localhost devstack]$ ip netns
+qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ openstack router list
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| ID                                   | Name    | Status | State | Project                          | Distributed | HA    |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| 37cf7f19-746f-4d1f-aba6-04d4a59a5426 | R2      | ACTIVE | UP    | 4b1ca7a7fdbe4a71968340dd1b88b448 | False       | False |
+| 3b7ef7ba-2560-459f-8338-a77bedc0482e | router1 | ACTIVE | UP    | 636ae43cd22043af908dc3b2e3a8709f | False       | False |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+[pganapa2@localhost devstack]$ openstack router create R3
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                  |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                     |
+| availability_zone_hints |                                                                                                                                                                                                        |
+| availability_zones      |                                                                                                                                                                                                        |
+| created_at              | 2019-07-17T12:32:57Z                                                                                                                                                                                   |
+| description             |                                                                                                                                                                                                        |
+| distributed             | False                                                                                                                                                                                                  |
+| external_gateway_info   | None                                                                                                                                                                                                   |
+| flavor_id               | None                                                                                                                                                                                                   |
+| ha                      | False                                                                                                                                                                                                  |
+| id                      | 3b9a562e-e078-4f81-8906-ee53e8e07ef2                                                                                                                                                                   |
+| location                | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | R3                                                                                                                                                                                                     |
+| project_id              | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| revision_number         | 1                                                                                                                                                                                                      |
+| routes                  |                                                                                                                                                                                                        |
+| status                  | ACTIVE                                                                                                                                                                                                 |
+| tags                    |                                                                                                                                                                                                        |
+| updated_at              | 2019-07-17T12:32:57Z                                                                                                                                                                                   |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack router add subnet R3 subnet02
+[pganapa2@localhost devstack]$ openstack router list
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| ID                                   | Name    | Status | State | Project                          | Distributed | HA    |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| 37cf7f19-746f-4d1f-aba6-04d4a59a5426 | R2      | ACTIVE | UP    | 4b1ca7a7fdbe4a71968340dd1b88b448 | False       | False |
+| 3b7ef7ba-2560-459f-8338-a77bedc0482e | router1 | ACTIVE | UP    | 636ae43cd22043af908dc3b2e3a8709f | False       | False |
+| 3b9a562e-e078-4f81-8906-ee53e8e07ef2 | R3      | ACTIVE | UP    | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9 | False       | False |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+[pganapa2@localhost devstack]$ openstack router show R2
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                                                                                          |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                                                                                             |
+| availability_zone_hints |                                                                                                                                                                                                                                                                                |
+| availability_zones      | nova                                                                                                                                                                                                                                                                           |
+| created_at              | 2019-07-17T10:17:48Z                                                                                                                                                                                                                                                           |
+| description             |                                                                                                                                                                                                                                                                                |
+| distributed             | False                                                                                                                                                                                                                                                                          |
+| external_gateway_info   | {"network_id": "ee6533cd-a952-470d-b71e-26508cbe5e9f", "enable_snat": true, "external_fixed_ips": [{"subnet_id": "7a6a556c-eb38-45b0-b18e-079ffe5abeca", "ip_address": "172.24.4.253"}, {"subnet_id": "614b2734-2748-48b4-9774-85214a760341", "ip_address": "2001:db8::1bf"}]} |
+| flavor_id               | None                                                                                                                                                                                                                                                                           |
+| ha                      | False                                                                                                                                                                                                                                                                          |
+| id                      | 37cf7f19-746f-4d1f-aba6-04d4a59a5426                                                                                                                                                                                                                                           |
+| interfaces_info         | [{"subnet_id": "d73323bf-2028-4453-81b0-2c50824e7509", "ip_address": "10.5.5.1", "port_id": "ae4fb86e-647e-4377-a226-3896d754479d"}]                                                                                                                                           |
+| location                | Munch({'project': Munch({'domain_id': None, 'id': u'4b1ca7a7fdbe4a71968340dd1b88b448', 'name': None, 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None})                                                                                            |
+| name                    | R2                                                                                                                                                                                                                                                                             |
+| project_id              | 4b1ca7a7fdbe4a71968340dd1b88b448                                                                                                                                                                                                                                               |
+| revision_number         | 4                                                                                                                                                                                                                                                                              |
+| routes                  |                                                                                                                                                                                                                                                                                |
+| status                  | ACTIVE                                                                                                                                                                                                                                                                         |
+| tags                    |                                                                                                                                                                                                                                                                                |
+| updated_at              | 2019-07-17T10:36:41Z                                                                                                                                                                                                                                                           |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack router show R3
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                  |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                     |
+| availability_zone_hints |                                                                                                                                                                                                        |
+| availability_zones      | nova                                                                                                                                                                                                   |
+| created_at              | 2019-07-17T12:32:57Z                                                                                                                                                                                   |
+| description             |                                                                                                                                                                                                        |
+| distributed             | False                                                                                                                                                                                                  |
+| external_gateway_info   | None                                                                                                                                                                                                   |
+| flavor_id               | None                                                                                                                                                                                                   |
+| ha                      | False                                                                                                                                                                                                  |
+| id                      | 3b9a562e-e078-4f81-8906-ee53e8e07ef2                                                                                                                                                                   |
+| interfaces_info         | [{"subnet_id": "ee9cd7e1-a11a-48d0-9b70-558fd65ce44e", "ip_address": "10.5.6.1", "port_id": "2f32638e-5627-4b44-83ce-4007e7d2190b"}]                                                                   |
+| location                | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | R3                                                                                                                                                                                                     |
+| project_id              | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| revision_number         | 2                                                                                                                                                                                                      |
+| routes                  |                                                                                                                                                                                                        |
+| status                  | ACTIVE                                                                                                                                                                                                 |
+| tags                    |                                                                                                                                                                                                        |
+| updated_at              | 2019-07-17T12:33:47Z                                                                                                                                                                                   |
++-------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ ip netns
+qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 (id: 5)
+qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ openstack network router-gateway-set R3 public
+openstack: 'network router-gateway-set R3 public' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  network agent add network
+  network agent add router
+  network agent delete
+  network agent list
+  network agent remove network
+  network agent remove router
+  network agent set
+  network agent show
+  network auto allocated topology create
+  network auto allocated topology delete
+  network create
+  network delete
+  network flavor add profile
+  network flavor create
+  network flavor delete
+  network flavor list
+  network flavor profile create
+  network flavor profile delete
+  network flavor profile list
+  network flavor profile set
+  network flavor profile show
+  network flavor remove profile
+  network flavor set
+  network flavor show
+  network list
+  network log create
+  network log delete
+  network log list
+  network log set
+  network log show
+  network loggable resources list
+  network meter create
+  network meter delete
+  network meter list
+  network meter rule create
+  network meter rule delete
+  network meter rule list
+  network meter rule show
+  network meter show
+  network onboard subnets
+  network qos policy create
+  network qos policy delete
+  network qos policy list
+  network qos policy set
+  network qos policy show
+  network qos rule create
+  network qos rule delete
+  network qos rule list
+  network qos rule set
+  network qos rule show
+  network qos rule type list
+  network qos rule type show
+  network rbac create
+  network rbac delete
+  network rbac list
+  network rbac set
+  network rbac show
+  network segment create
+  network segment delete
+  network segment list
+  network segment range create
+  network segment range delete
+  network segment range list
+  network segment range set
+  network segment range show
+  network segment set
+  network segment show
+  network service provider list
+  network set
+  network show
+  network subport list
+  network trunk create
+  network trunk delete
+  network trunk list
+  network trunk set
+  network trunk show
+  network trunk unset
+  network unset
+  endpoint add project
+  endpoint create
+  endpoint delete
+  endpoint group add project
+  endpoint group create
+  endpoint group delete
+  endpoint group list
+  endpoint group remove project
+  endpoint group set
+  endpoint group show
+  endpoint list
+  endpoint remove project
+  endpoint set
+  endpoint show
+[pganapa2@localhost devstack]$ openstack network router-gateway-set R3 public^C
+[pganapa2@localhost devstack]$ nuetron router-^C
+[pganapa2@localhost devstack]$ neutron router-gateway-set R3 public
+neutron CLI is deprecated and will be removed in the future. Use openstack CLI instead.
+Set gateway for router R3
+[pganapa2@localhost devstack]$ ip netns
+qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 (id: 5)
+qdhcp-96da0161-6478-426e-ac27-d406fc8699d7 (id: 4)
+qrouter-37cf7f19-746f-4d1f-aba6-04d4a59a5426 (id: 3)
+qdhcp-9c8b96f7-ba6e-49b1-8378-dd0b2bccf4dc (id: 2)
+qrouter-3b7ef7ba-2560-459f-8338-a77bedc0482e (id: 1)
+qdhcp-38c449a4-2fd6-409c-aee2-9b91e23b6b9e (id: 0)
+[pganapa2@localhost devstack]$ ip netns qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 10.5.6.1
+Command "qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2" is unknown, try "ip netns help".
+[pganapa2@localhost devstack]$ sudo ip netns qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 10.5.6.1
+Command "qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2" is unknown, try "ip netns help".
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 10.5.6.1
+PING 10.5.6.1 (10.5.6.1) 56(84) bytes of data.
+64 bytes from 10.5.6.1: icmp_seq=1 ttl=64 time=0.099 ms
+64 bytes from 10.5.6.1: icmp_seq=2 ttl=64 time=0.119 ms
+64 bytes from 10.5.6.1: icmp_seq=3 ttl=64 time=0.145 ms
+^C
+--- 10.5.6.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.099/0.121/0.145/0.018 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 10.5.6.2
+PING 10.5.6.2 (10.5.6.2) 56(84) bytes of data.
+64 bytes from 10.5.6.2: icmp_seq=1 ttl=64 time=1.06 ms
+64 bytes from 10.5.6.2: icmp_seq=2 ttl=64 time=0.222 ms
+64 bytes from 10.5.6.2: icmp_seq=3 ttl=64 time=0.256 ms
+^C
+--- 10.5.6.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 0.222/0.513/1.063/0.389 ms
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 10.5.6.3
+PING 10.5.6.3 (10.5.6.3) 56(84) bytes of data.
+From 10.5.6.1 icmp_seq=1 Destination Host Unreachable
+From 10.5.6.1 icmp_seq=2 Destination Host Unreachable
+From 10.5.6.1 icmp_seq=3 Destination Host Unreachable
+From 10.5.6.1 icmp_seq=4 Destination Host Unreachable
+^C
+--- 10.5.6.3 ping statistics ---
+5 packets transmitted, 0 received, +4 errors, 100% packet loss, time 4003ms
+pipe 4
+[pganapa2@localhost devstack]$ openstack security group list
++--------------------------------------+---------+------------------------+----------------------------------+------+
+| ID                                   | Name    | Description            | Project                          | Tags |
++--------------------------------------+---------+------------------------+----------------------------------+------+
+| 0c67e331-ba48-4a64-8ca2-03fb1b3e9dd2 | default | Default security group | 636ae43cd22043af908dc3b2e3a8709f | []   |
+| 2a28fe63-1d68-4c2d-8c2b-227c9e07b847 | default | Default security group | 4b1ca7a7fdbe4a71968340dd1b88b448 | []   |
+| 638669fd-e1d7-4ab0-8e97-2ddd60d9300c | default | Default security group | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9 | []   |
+| 6fe44e99-3a02-40cd-bd8f-1d206af86886 | default | Default security group | acafc8c213b841aaa08a17d8cc608503 | []   |
+| a54becf4-7536-45e9-b2da-39dd6c9ae688 | default | Default security group |                                  | []   |
++--------------------------------------+---------+------------------------+----------------------------------+------+
+[pganapa2@localhost devstack]$ openstack project list
++----------------------------------+--------------------+
+| ID                               | Name               |
++----------------------------------+--------------------+
+| 48e8ac6a64ae4f2a963b2ba9bf9bbfc9 | networkproject02   |
+| 4b1ca7a7fdbe4a71968340dd1b88b448 | admin              |
+| 636ae43cd22043af908dc3b2e3a8709f | demo               |
+| 77f24af8b40944caaf108d2ea9783579 | alt_demo           |
+| 86da20d002444d928a12148528150713 | firstProject       |
+| ac9dabbf6df7415c8c2fbbde5a86b976 | newproject         |
+| d0dee4d0e76d4c33b9a6b0e19c0d9dd5 | invisible_to_admin |
+| da98690f80664e8cb946398c58953970 | service            |
++----------------------------------+--------------------+
+[pganapa2@localhost devstack]$ ^C
+[pganapa2@localhost devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --protcol icmp --ingress 638669fd-e1d7-4ab0-8e97-2ddd60d9300c
+usage: openstack security group rule create [-h]
+                                            [-f {json,shell,table,value,yaml}]
+                                            [-c COLUMN]
+                                            [--max-width <integer>]
+                                            [--fit-width] [--print-empty]
+                                            [--noindent] [--prefix PREFIX]
+                                            [--remote-ip <ip-address> | --remote-group <group>]
+                                            [--description <description>]
+                                            [--dst-port <port-range>]
+                                            [--icmp-type <icmp-type>]
+                                            [--icmp-code <icmp-code>]
+                                            [--protocol <protocol>]
+                                            [--ingress | --egress]
+                                            [--ethertype <ethertype>]
+                                            [--project <project>]
+                                            [--project-domain <project-domain>]
+                                            <group>
+openstack security group rule create: error: unrecognized arguments: --protcol 638669fd-e1d7-4ab0-8e97-2ddd60d9300c
+[pganapa2@localhost devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --protocol icmp --ingress 638669fd-e1d7-4ab0-8e97-2ddd60d9300c
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at        | 2019-07-17T12:45:13Z                                                                                                                                                                                   |
+| description       |                                                                                                                                                                                                        |
+| direction         | ingress                                                                                                                                                                                                |
+| ether_type        | IPv4                                                                                                                                                                                                   |
+| id                | f0eed16f-f021-4c1f-80ee-57e1792d18df                                                                                                                                                                   |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | None                                                                                                                                                                                                   |
+| port_range_max    | None                                                                                                                                                                                                   |
+| port_range_min    | None                                                                                                                                                                                                   |
+| project_id        | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| protocol          | icmp                                                                                                                                                                                                   |
+| remote_group_id   | None                                                                                                                                                                                                   |
+| remote_ip_prefix  | 0.0.0.0/0                                                                                                                                                                                              |
+| revision_number   | 0                                                                                                                                                                                                      |
+| security_group_id | 638669fd-e1d7-4ab0-8e97-2ddd60d9300c                                                                                                                                                                   |
+| tags              | []                                                                                                                                                                                                     |
+| updated_at        | 2019-07-17T12:45:13Z                                                                                                                                                                                   |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack security group rule create --remote-ip 0.0.0.0/0 --dst-port 22 --protocol tcp --ingress 638669fd-e1d7-4ab0-8e97-2ddd60d9300c
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at        | 2019-07-17T12:46:10Z                                                                                                                                                                                   |
+| description       |                                                                                                                                                                                                        |
+| direction         | ingress                                                                                                                                                                                                |
+| ether_type        | IPv4                                                                                                                                                                                                   |
+| id                | 763e29fe-8d50-4d61-874f-0ee919462ee2                                                                                                                                                                   |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'48e8ac6a64ae4f2a963b2ba9bf9bbfc9', 'name': 'networkproject02', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | None                                                                                                                                                                                                   |
+| port_range_max    | 22                                                                                                                                                                                                     |
+| port_range_min    | 22                                                                                                                                                                                                     |
+| project_id        | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                       |
+| protocol          | tcp                                                                                                                                                                                                    |
+| remote_group_id   | None                                                                                                                                                                                                   |
+| remote_ip_prefix  | 0.0.0.0/0                                                                                                                                                                                              |
+| revision_number   | 0                                                                                                                                                                                                      |
+| security_group_id | 638669fd-e1d7-4ab0-8e97-2ddd60d9300c                                                                                                                                                                   |
+| tags              | []                                                                                                                                                                                                     |
+| updated_at        | 2019-07-17T12:46:10Z                                                                                                                                                                                   |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 172.24.4.96
+PING 172.24.4.96 (172.24.4.96) 56(84) bytes of data.
+64 bytes from 172.24.4.96: icmp_seq=1 ttl=64 time=0.091 ms
+64 bytes from 172.24.4.96: icmp_seq=2 ttl=64 time=0.075 ms
+64 bytes from 172.24.4.96: icmp_seq=3 ttl=64 time=0.071 ms
+^C
+--- 172.24.4.96 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.071/0.079/0.091/0.008 ms
+[pganapa2@localhost devstack]$ openstack server create --image -^C
+[pganapa2@localhost devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[pganapa2@localhost devstack]$ sudo ip netns exec qrouter-3b9a562e-e078-4f81-8906-ee53e8e07ef2 ping 172.24.4.96^C
+[pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0-x86_64-disk --flavor c1 --nic net-id=96da0161-6478-426e-ac27-d406fc8699d7 inst01
++-------------------------------------+-----------------------------------------------------------------+
+| Field                               | Value                                                           |
++-------------------------------------+-----------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                          |
+| OS-EXT-AZ:availability_zone         |                                                                 |
+| OS-EXT-SRV-ATTR:host                | None                                                            |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                            |
+| OS-EXT-SRV-ATTR:instance_name       |                                                                 |
+| OS-EXT-STS:power_state              | NOSTATE                                                         |
+| OS-EXT-STS:task_state               | scheduling                                                      |
+| OS-EXT-STS:vm_state                 | building                                                        |
+| OS-SRV-USG:launched_at              | None                                                            |
+| OS-SRV-USG:terminated_at            | None                                                            |
+| accessIPv4                          |                                                                 |
+| accessIPv6                          |                                                                 |
+| addresses                           |                                                                 |
+| adminPass                           | GA7AnyebaKgP                                                    |
+| config_drive                        |                                                                 |
+| created                             | 2019-07-17T12:50:43Z                                            |
+| flavor                              | cirros256 (c1)                                                  |
+| hostId                              |                                                                 |
+| id                                  | 80dd9c52-6312-4a64-b9ba-fa57d1eb5678                            |
+| image                               | cirros-0.4.0-x86_64-disk (716fcf24-025a-466c-8b96-46907b7a5f98) |
+| key_name                            | None                                                            |
+| name                                | inst01                                                          |
+| progress                            | 0                                                               |
+| project_id                          | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                |
+| properties                          |                                                                 |
+| security_groups                     | name='default'                                                  |
+| status                              | BUILD                                                           |
+| updated                             | 2019-07-17T12:50:44Z                                            |
+| user_id                             | 4ff018fae8a0474d980fec7dcb3b2f63                                |
+| volumes_attached                    |                                                                 |
++-------------------------------------+-----------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack server list
++--------------------------------------+--------+--------+---------------------+--------------------------+-----------+
+| ID                                   | Name   | Status | Networks            | Image                    | Flavor    |
++--------------------------------------+--------+--------+---------------------+--------------------------+-----------+
+| 80dd9c52-6312-4a64-b9ba-fa57d1eb5678 | inst01 | ACTIVE | network01=10.5.6.42 | cirros-0.4.0-x86_64-disk | cirros256 |
++--------------------------------------+--------+--------+---------------------+--------------------------+-----------+
+[pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0-x86_64-disk --flavor c1 --nic net-id=96da0161-6478-426e-ac27-d406fc8699d7 inst02
++-------------------------------------+-----------------------------------------------------------------+
+| Field                               | Value                                                           |
++-------------------------------------+-----------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                          |
+| OS-EXT-AZ:availability_zone         |                                                                 |
+| OS-EXT-SRV-ATTR:host                | None                                                            |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                            |
+| OS-EXT-SRV-ATTR:instance_name       |                                                                 |
+| OS-EXT-STS:power_state              | NOSTATE                                                         |
+| OS-EXT-STS:task_state               | scheduling                                                      |
+| OS-EXT-STS:vm_state                 | building                                                        |
+| OS-SRV-USG:launched_at              | None                                                            |
+| OS-SRV-USG:terminated_at            | None                                                            |
+| accessIPv4                          |                                                                 |
+| accessIPv6                          |                                                                 |
+| addresses                           |                                                                 |
+| adminPass                           | rfdSV8YB2DbJ                                                    |
+| config_drive                        |                                                                 |
+| created                             | 2019-07-17T12:52:13Z                                            |
+| flavor                              | cirros256 (c1)                                                  |
+| hostId                              |                                                                 |
+| id                                  | 52558833-9fa6-455a-90e4-e4578f62dae2                            |
+| image                               | cirros-0.4.0-x86_64-disk (716fcf24-025a-466c-8b96-46907b7a5f98) |
+| key_name                            | None                                                            |
+| name                                | inst02                                                          |
+| progress                            | 0                                                               |
+| project_id                          | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                |
+| properties                          |                                                                 |
+| security_groups                     | name='default'                                                  |
+| status                              | BUILD                                                           |
+| updated                             | 2019-07-17T12:52:14Z                                            |
+| user_id                             | 4ff018fae8a0474d980fec7dcb3b2f63                                |
+| volumes_attached                    |                                                                 |
++-------------------------------------+-----------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0-x86_64-disk --flavor c1 --nic net-id=96da0161-6478-426e-ac27-d406fc8699d7 inst03
++-------------------------------------+-----------------------------------------------------------------+
+| Field                               | Value                                                           |
++-------------------------------------+-----------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                          |
+| OS-EXT-AZ:availability_zone         |                                                                 |
+| OS-EXT-SRV-ATTR:host                | None                                                            |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                            |
+| OS-EXT-SRV-ATTR:instance_name       |                                                                 |
+| OS-EXT-STS:power_state              | NOSTATE                                                         |
+| OS-EXT-STS:task_state               | scheduling                                                      |
+| OS-EXT-STS:vm_state                 | building                                                        |
+| OS-SRV-USG:launched_at              | None                                                            |
+| OS-SRV-USG:terminated_at            | None                                                            |
+| accessIPv4                          |                                                                 |
+| accessIPv6                          |                                                                 |
+| addresses                           |                                                                 |
+| adminPass                           | wRRHXrs67ewA                                                    |
+| config_drive                        |                                                                 |
+| created                             | 2019-07-17T12:53:02Z                                            |
+| flavor                              | cirros256 (c1)                                                  |
+| hostId                              |                                                                 |
+| id                                  | e77fa336-6887-4a8c-abf3-a0af713435fd                            |
+| image                               | cirros-0.4.0-x86_64-disk (716fcf24-025a-466c-8b96-46907b7a5f98) |
+| key_name                            | None                                                            |
+| name                                | inst03                                                          |
+| progress                            | 0                                                               |
+| project_id                          | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                |
+| properties                          |                                                                 |
+| security_groups                     | name='default'                                                  |
+| status                              | BUILD                                                           |
+| updated                             | 2019-07-17T12:53:03Z                                            |
+| user_id                             | 4ff018fae8a0474d980fec7dcb3b2f63                                |
+| volumes_attached                    |                                                                 |
++-------------------------------------+-----------------------------------------------------------------+
+[pganapa2@localhost devstack]$
+[pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0-x86_64-disk --key-name mykeypair --flavor c1 --nic net-id=96da0161-6478-426e-ac27-d406fc8699d7 inst04
++-------------------------------------+-----------------------------------------------------------------+
+| Field                               | Value                                                           |
++-------------------------------------+-----------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                          |
+| OS-EXT-AZ:availability_zone         |                                                                 |
+| OS-EXT-SRV-ATTR:host                | None                                                            |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                            |
+| OS-EXT-SRV-ATTR:instance_name       |                                                                 |
+| OS-EXT-STS:power_state              | NOSTATE                                                         |
+| OS-EXT-STS:task_state               | scheduling                                                      |
+| OS-EXT-STS:vm_state                 | building                                                        |
+| OS-SRV-USG:launched_at              | None                                                            |
+| OS-SRV-USG:terminated_at            | None                                                            |
+| accessIPv4                          |                                                                 |
+| accessIPv6                          |                                                                 |
+| addresses                           |                                                                 |
+| adminPass                           | teZ2tBaDbpWd                                                    |
+| config_drive                        |                                                                 |
+| created                             | 2019-07-17T13:22:52Z                                            |
+| flavor                              | cirros256 (c1)                                                  |
+| hostId                              |                                                                 |
+| id                                  | 1dde705a-edee-4f29-9ac9-357c80f54b0b                            |
+| image                               | cirros-0.4.0-x86_64-disk (716fcf24-025a-466c-8b96-46907b7a5f98) |
+| key_name                            | mykeypair                                                       |
+| name                                | inst04                                                          |
+| progress                            | 0                                                               |
+| project_id                          | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                |
+| properties                          |                                                                 |
+| security_groups                     | name='default'                                                  |
+| status                              | BUILD                                                           |
+| updated                             | 2019-07-17T13:22:54Z                                            |
+| user_id                             | 4ff018fae8a0474d980fec7dcb3b2f63                                |
+| volumes_attached                    |                                                                 |
++-------------------------------------+-----------------------------------------------------------------+
+
+[pganapa2@localhost devstack]$ openstack server list
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
+| ID                                   | Name   | Status | Networks             | Image                    | Flavor    |
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
+| 1dde705a-edee-4f29-9ac9-357c80f54b0b | inst04 | ACTIVE | network01=10.5.6.229 | cirros-0.4.0-x86_64-disk | cirros256 |
+| e77fa336-6887-4a8c-abf3-a0af713435fd | inst03 | ACTIVE | network01=10.5.6.56  | cirros-0.4.0-x86_64-disk | cirros256 |
+| 52558833-9fa6-455a-90e4-e4578f62dae2 | inst02 | ACTIVE | network01=10.5.6.250 | cirros-0.4.0-x86_64-disk | cirros256 |
+| 80dd9c52-6312-4a64-b9ba-fa57d1eb5678 | inst01 | ACTIVE | network01=10.5.6.42  | cirros-0.4.0-x86_64-disk | cirros256 |
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
+
+[pganapa2@localhost devstack]$ cat /etc/nova/nova.conf|grep filter
+driver = filter_scheduler
+[filter_scheduler]
+enabled_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,SameHostFilter,DifferentHostFilter
+
+[pganapa2@localhost devstack]$ openstack server image create --name inst04_bkp_1 inst04
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                                                                                                                                                                                   |
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| checksum         | None                                                                                                                                                                                                                                                                                                                                                    |
+| container_format | None                                                                                                                                                                                                                                                                                                                                                    |
+| created_at       | 2019-07-17T13:33:41Z                                                                                                                                                                                                                                                                                                                                    |
+| disk_format      | None                                                                                                                                                                                                                                                                                                                                                    |
+| file             | /v2/images/d5c406e0-0766-45da-a3d3-957d0db083af/file                                                                                                                                                                                                                                                                                                    |
+| id               | d5c406e0-0766-45da-a3d3-957d0db083af                                                                                                                                                                                                                                                                                                                    |
+| min_disk         | 1                                                                                                                                                                                                                                                                                                                                                       |
+| min_ram          | 0                                                                                                                                                                                                                                                                                                                                                       |
+| name             | inst04_bkp_1                                                                                                                                                                                                                                                                                                                                            |
+| owner            | 48e8ac6a64ae4f2a963b2ba9bf9bbfc9                                                                                                                                                                                                                                                                                                                        |
+| properties       | base_image_ref='716fcf24-025a-466c-8b96-46907b7a5f98', boot_roles='reader,member,admin', image_type='snapshot', instance_uuid='1dde705a-edee-4f29-9ac9-357c80f54b0b', os_hash_algo='None', os_hash_value='None', os_hidden='False', owner_project_name='networkproject02', owner_user_name='networkadmin01', user_id='4ff018fae8a0474d980fec7dcb3b2f63' |
+| protected        | False                                                                                                                                                                                                                                                                                                                                                   |
+| schema           | /v2/schemas/image                                                                                                                                                                                                                                                                                                                                       |
+| size             | None                                                                                                                                                                                                                                                                                                                                                    |
+| status           | queued                                                                                                                                                                                                                                                                                                                                                  |
+| tags             |                                                                                                                                                                                                                                                                                                                                                         |
+| updated_at       | 2019-07-17T13:33:41Z                                                                                                                                                                                                                                                                                                                                    |
+| virtual_size     | None                                                                                                                                                                                                                                                                                                                                                    |
+| visibility       | private                                                                                                                                                                                                                                                                                                                                                 |
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| 716fcf24-025a-466c-8b96-46907b7a5f98 | cirros-0.4.0-x86_64-disk | active |
+| d5c406e0-0766-45da-a3d3-957d0db083af | inst04_bkp_1             | queued |
++--------------------------------------+--------------------------+--------+
+
+[pganapa2@localhost devstack]$ openstack aggregate list
+
+[pganapa2@localhost devstack]$ openstack aggregate create --property SSD=true agg1
++-------------------+----------------------------+
+| Field             | Value                      |
++-------------------+----------------------------+
+| availability_zone | None                       |
+| created_at        | 2019-07-17T13:36:07.000000 |
+| deleted           | False                      |
+| deleted_at        | None                       |
+| hosts             | []                         |
+| id                | 1                          |
+| metadata          | {u'SSD': u'true'}          |
+| name              | agg1                       |
+| updated_at        | 2019-07-17T13:36:10.252036 |
++-------------------+----------------------------+
+
+[pganapa2@localhost devstack]$ openstack console url show --novnc inst04
++-------+-----------------------------------------------------------------------------------+
+| Field | Value                                                                             |
++-------+-----------------------------------------------------------------------------------+
+| type  | novnc                                                                             |
+| url   | http://192.168.1.23:6080/vnc_lite.html?token=22693fd5-9877-4e30-a7d7-49fa72360156 |
++-------+-----------------------------------------------------------------------------------+
+[pganapa2@localhost devstack]$ ^C
+[pganapa2@localhost devstack]$ openstack console log show inst04
+[pganapa2@localhost devstack]$ openstack server list
++--------------------------------------+--------+---------+----------------------+--------------------------+-----------+
+| ID                                   | Name   | Status  | Networks             | Image                    | Flavor    |
++--------------------------------------+--------+---------+----------------------+--------------------------+-----------+
+| 1dde705a-edee-4f29-9ac9-357c80f54b0b | inst04 | SHUTOFF | network01=10.5.6.229 | cirros-0.4.0-x86_64-disk | cirros256 |
+| e77fa336-6887-4a8c-abf3-a0af713435fd | inst03 | ACTIVE  | network01=10.5.6.56  | cirros-0.4.0-x86_64-disk | cirros256 |
+| 52558833-9fa6-455a-90e4-e4578f62dae2 | inst02 | ACTIVE  | network01=10.5.6.250 | cirros-0.4.0-x86_64-disk | cirros256 |
+| 80dd9c52-6312-4a64-b9ba-fa57d1eb5678 | inst01 | ACTIVE  | network01=10.5.6.42  | cirros-0.4.0-x86_64-disk | cirros256 |
++--------------------------------------+--------+---------+----------------------+--------------------------+-----------+
+[pganapa2@localhost devstack]$ openstack server start inst04
+[pganapa2@localhost devstack]$ openstack server list
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
+| ID                                   | Name   | Status | Networks             | Image                    | Flavor    |
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
+| 1dde705a-edee-4f29-9ac9-357c80f54b0b | inst04 | ACTIVE | network01=10.5.6.229 | cirros-0.4.0-x86_64-disk | cirros256 |
+| e77fa336-6887-4a8c-abf3-a0af713435fd | inst03 | ACTIVE | network01=10.5.6.56  | cirros-0.4.0-x86_64-disk | cirros256 |
+| 52558833-9fa6-455a-90e4-e4578f62dae2 | inst02 | ACTIVE | network01=10.5.6.250 | cirros-0.4.0-x86_64-disk | cirros256 |
+| 80dd9c52-6312-4a64-b9ba-fa57d1eb5678 | inst01 | ACTIVE | network01=10.5.6.42  | cirros-0.4.0-x86_64-disk | cirros256 |
++--------------------------------------+--------+--------+----------------------+--------------------------+-----------+
 
 
