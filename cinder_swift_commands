@@ -1,0 +1,404 @@
+# create a volume then snapshot and back up the volume.
+[pganapa2@localhost devstack]$ clear
+[pganapa2@localhost devstack]$ Cinder project
+-bash: Cinder: command not found
+[pganapa2@localhost devstack]$ openstack cinder service list
+openstack: 'cinder service list' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  consumer create
+  consumer delete
+  consumer list
+  consumer set
+  consumer show
+[pganapa2@localhost devstack]$ cinder service-list
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+| Binary           | Host                              | Zone | Status  | State | Updated_at                 | Disabled Reason |
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+| cinder-scheduler | localhost.localdomain             | nova | enabled | up    | 2019-07-17T12:42:48.000000 | -               |
+| cinder-volume    | localhost.localdomain@lvmdriver-1 | nova | enabled | up    | 2019-07-17T12:42:51.000000 | -               |
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+[pganapa2@localhost devstack]$ cinder service-disable ^C
+[pganapa2@localhost devstack]$ cinder service-enable^C
+[pganapa2@localhost devstack]$ openstack command list|grep openstack.volume -A 40
+| openstack.volume.v3        | consistency group add volume           |
+|                            | consistency group create               |
+|                            | consistency group delete               |
+|                            | consistency group list                 |
+|                            | consistency group remove volume        |
+|                            | consistency group set                  |
+|                            | consistency group show                 |
+|                            | consistency group snapshot create      |
+|                            | consistency group snapshot delete      |
+|                            | consistency group snapshot list        |
+|                            | consistency group snapshot show        |
+|                            | volume backup create                   |
+|                            | volume backup delete                   |
+|                            | volume backup list                     |
+|                            | volume backup restore                  |
+|                            | volume backup set                      |
+|                            | volume backup show                     |
+|                            | volume create                          |
+|                            | volume delete                          |
+|                            | volume host set                        |
+|                            | volume list                            |
+|                            | volume migrate                         |
+|                            | volume qos associate                   |
+|                            | volume qos create                      |
+|                            | volume qos delete                      |
+|                            | volume qos disassociate                |
+|                            | volume qos list                        |
+|                            | volume qos set                         |
+|                            | volume qos show                        |
+|                            | volume qos unset                       |
+|                            | volume service list                    |
+|                            | volume service set                     |
+|                            | volume set                             |
+|                            | volume show                            |
+|                            | volume snapshot create                 |
+|                            | volume snapshot delete                 |
+|                            | volume snapshot list                   |
+|                            | volume snapshot set                    |
+|                            | volume snapshot show                   |
+|                            | volume snapshot unset                  |
+|                            | volume transfer request accept         |
+[pganapa2@localhost devstack]$ openstack volume create --size 1 vol1
++---------------------+--------------------------------------+
+| Field               | Value                                |
++---------------------+--------------------------------------+
+| attachments         | []                                   |
+| availability_zone   | nova                                 |
+| bootable            | false                                |
+| consistencygroup_id | None                                 |
+| created_at          | 2019-07-17T12:44:39.000000           |
+| description         | None                                 |
+| encrypted           | False                                |
+| id                  | 0522b278-d089-40d4-97c1-773b281f8dc7 |
+| migration_status    | None                                 |
+| multiattach         | False                                |
+| name                | vol1                                 |
+| properties          |                                      |
+| replication_status  | None                                 |
+| size                | 1                                    |
+| snapshot_id         | None                                 |
+| source_volid        | None                                 |
+| status              | creating                             |
+| type                | lvmdriver-1                          |
+| updated_at          | None                                 |
+| user_id             | f32abce668ca44f394319e55dc48ffc4     |
++---------------------+--------------------------------------+
+[pganapa2@localhost devstack]$ openstack volume list
++--------------------------------------+------+-----------+------+-------------+
+| ID                                   | Name | Status    | Size | Attached to |
++--------------------------------------+------+-----------+------+-------------+
+| 0522b278-d089-40d4-97c1-773b281f8dc7 | vol1 | available |    1 |             |
++--------------------------------------+------+-----------+------+-------------+
+[pganapa2@localhost devstack]$ openstack server list
++--------------------------------------+--------+--------+------------------------------------+--------------------------+-----------+
+| ID                                   | Name   | Status | Networks                           | Image                    | Flavor    |
++--------------------------------------+--------+--------+------------------------------------+--------------------------+-----------+
+| 7cfb8881-807b-49d4-bdfd-1a05f3f84fa1 | inst06 | ACTIVE | network03=10.5.8.221, 172.24.4.186 | cirros-0.4.0-x86_64-disk | cirros256 |
+| 253f7593-3707-43b3-90dd-d50bc1912287 | inst05 | ACTIVE | network03=10.5.8.75, 172.24.4.92   | cirros-0.4.0-x86_64-disk | cirros256 |
+| 4e10f249-aedb-4593-9b75-6f2e5bf25843 | inst04 | ACTIVE | network02=10.5.7.97, 172.24.4.84   | cirros-0.4.0-x86_64-disk | cirros256 |
+| 57f74705-eb90-4ca7-b7fa-917aad049405 | inst03 | ACTIVE | network02=10.5.7.106, 172.24.4.48  | cirros-0.4.0-x86_64-disk | cirros256 |
+| b38c9aaa-2822-4a31-b4c0-2a8a4c4d6d53 | inst02 | ACTIVE | network01=10.5.6.205, 172.24.4.32  | cirros-0.4.0-x86_64-disk | cirros256 |
+| 804e321c-e28a-4732-b30c-a0c49214945b | inst01 | ACTIVE | network01=10.5.6.135, 172.24.4.11  | cirros-0.4.0-x86_64-disk | cirros256 |
++--------------------------------------+--------+--------+------------------------------------+--------------------------+-----------+
+[pganapa2@localhost devstack]$ ping 172.24.4.32
+PING 172.24.4.32 (172.24.4.32) 56(84) bytes of data.
+64 bytes from 172.24.4.32: icmp_seq=1 ttl=63 time=40.5 ms
+64 bytes from 172.24.4.32: icmp_seq=2 ttl=63 time=40.3 ms
+^C
+--- 172.24.4.32 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1007ms
+rtt min/avg/max/mdev = 40.394/40.478/40.562/0.084 ms
+[pganapa2@localhost devstack]$ ssh cirros@172.24.4.32
+The authenticity of host '172.24.4.32 (172.24.4.32)' can't be established.
+ECDSA key fingerprint is SHA256:8ZNxOyXFObhj1NzPdP9pzO/Z9G4hGD5r0ELAU0Oii/0.
+ECDSA key fingerprint is MD5:bc:d5:05:60:35:1b:e6:2f:1a:ef:b8:6a:dc:ad:0a:00.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.24.4.32' (ECDSA) to the list of known hosts.
+cirros@172.24.4.32's password:
+$
+$
+$ ls /dev
+bus                 mapper              ram2                tty14               tty33               tty52               ttyS13              ttyS4
+console             mcelog              ram3                tty15               tty34               tty53               ttyS14              ttyS5
+cpu_dma_latency     mem                 ram4                tty16               tty35               tty54               ttyS15              ttyS6
+ecryptfs            memory_bandwidth    ram5                tty17               tty36               tty55               ttyS16              ttyS7
+full                net                 ram6                tty18               tty37               tty56               ttyS17              ttyS8
+fuse                network_latency     ram7                tty19               tty38               tty57               ttyS18              ttyS9
+hpet                network_throughput  ram8                tty2                tty39               tty58               ttyS19              ttyprintk
+hwrng               null                ram9                tty20               tty4                tty59               ttyS2               uinput
+input               port                random              tty21               tty40               tty6                ttyS20              urandom
+kmsg                ppp                 rfkill              tty22               tty41               tty60               ttyS21              vcs
+lightnvm            psaux               root                tty23               tty42               tty61               ttyS22              vcs1
+log                 ptmx                rtc0                tty24               tty43               tty62               ttyS23              vcsa
+loop-control        pts                 shm                 tty25               tty44               tty63               ttyS24              vcsa1
+loop0               ram0                snapshot            tty26               tty45               tty7                ttyS25              vda
+loop1               ram1                tty                 tty27               tty46               tty8                ttyS26              vda1
+loop2               ram10               tty0                tty28               tty47               tty9                ttyS27              vda15
+loop3               ram11               tty1                tty29               tty48               ttyS0               ttyS28              vga_arbiter
+loop4               ram12               tty10               tty3                tty49               ttyS1               ttyS29              zero
+loop5               ram13               tty11               tty30               tty5                ttyS10              ttyS3
+loop6               ram14               tty12               tty31               tty50               ttyS11              ttyS30
+loop7               ram15               tty13               tty32               tty51               ttyS12              ttyS31
+$ No vdb vdc or any other disk present
+-sh: No: not found
+$ exit
+Connection to 172.24.4.32 closed.
+[pganapa2@localhost devstack]$ openstack server add volumne inst02 vol1
+openstack: 'server add volumne inst02 vol1' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  server add fixed ip
+  server add floating ip
+  server add network
+  server add port
+  server add security group
+  server add volume
+  server backup create
+  server create
+  server delete
+  server dump create
+  server event list
+  server event show
+  server group create
+  server group delete
+  server group list
+  server group show
+  server image create
+  server list
+  server lock
+  server migrate
+  server pause
+  server reboot
+  server rebuild
+  server remove fixed ip
+  server remove floating ip
+  server remove network
+  server remove port
+  server remove security group
+  server remove volume
+  server rescue
+  server resize
+  server restore
+  server resume
+  server set
+  server shelve
+  server show
+  server ssh
+  server start
+  server stop
+  server suspend
+  server unlock
+  server unpause
+  server unrescue
+  server unset
+  server unshelve
+  service create
+  service delete
+  service list
+  service provider create
+  service provider delete
+  service provider list
+  service provider set
+  service provider show
+  service set
+  service show
+[pganapa2@localhost devstack]$ openstack server add volume inst02 vol1
+[pganapa2@localhost devstack]$ ssh cirros@172.24.4.32
+cirros@172.24.4.32's password:
+$ gocubsgo is a password
+-sh: gocubsgo: not found
+$ ls /dev
+bus                 mapper              ram2                tty14               tty33               tty52               ttyS13              ttyS4
+console             mcelog              ram3                tty15               tty34               tty53               ttyS14              ttyS5
+cpu_dma_latency     mem                 ram4                tty16               tty35               tty54               ttyS15              ttyS6
+ecryptfs            memory_bandwidth    ram5                tty17               tty36               tty55               ttyS16              ttyS7
+full                net                 ram6                tty18               tty37               tty56               ttyS17              ttyS8
+fuse                network_latency     ram7                tty19               tty38               tty57               ttyS18              ttyS9
+hpet                network_throughput  ram8                tty2                tty39               tty58               ttyS19              ttyprintk
+hwrng               null                ram9                tty20               tty4                tty59               ttyS2               uinput
+input               port                random              tty21               tty40               tty6                ttyS20              urandom
+kmsg                ppp                 rfkill              tty22               tty41               tty60               ttyS21              vcs
+lightnvm            psaux               root                tty23               tty42               tty61               ttyS22              vcs1
+log                 ptmx                rtc0                tty24               tty43               tty62               ttyS23              vcsa
+loop-control        pts                 shm                 tty25               tty44               tty63               ttyS24              vcsa1
+loop0               ram0                snapshot            tty26               tty45               tty7                ttyS25              vda
+loop1               ram1                tty                 tty27               tty46               tty8                ttyS26              vda1
+loop2               ram10               tty0                tty28               tty47               tty9                ttyS27              vda15
+loop3               ram11               tty1                tty29               tty48               ttyS0               ttyS28              vga_arbiter
+loop4               ram12               tty10               tty3                tty49               ttyS1               ttyS29              zero
+loop5               ram13               tty11               tty30               tty5                ttyS10              ttyS3
+loop6               ram14               tty12               tty31               tty50               ttyS11              ttyS30
+loop7               ram15               tty13               tty32               tty51               ttyS12              ttyS31
+$ exit
+Connection to 172.24.4.32 closed.
+[pganapa2@localhost devstack]$ openstack server add volume inst02 vol1
+Invalid volume: volume 0522b278-d089-40d4-97c1-773b281f8dc7 already attached (HTTP 400) (Request-ID: req-ad6b23f8-54c8-448f-aef1-8c09ba13e23d)
+[pganapa2@localhost devstack]$ openstack volume list
++--------------------------------------+------+--------+------+---------------------------------+
+| ID                                   | Name | Status | Size | Attached to                     |
++--------------------------------------+------+--------+------+---------------------------------+
+| 0522b278-d089-40d4-97c1-773b281f8dc7 | vol1 | in-use |    1 | Attached to inst02 on /dev/vdb  |
++--------------------------------------+------+--------+------+---------------------------------+
+[pganapa2@localhost devstack]$ ssh cirros@172.24.4.32
+cirros@172.24.4.32's password:
+$ ls /dev/vdb
+/dev/vdb
+$ ls /dev/
+bus                 mapper              ram2                tty14               tty33               tty52               ttyS13              ttyS4
+console             mcelog              ram3                tty15               tty34               tty53               ttyS14              ttyS5
+cpu_dma_latency     mem                 ram4                tty16               tty35               tty54               ttyS15              ttyS6
+ecryptfs            memory_bandwidth    ram5                tty17               tty36               tty55               ttyS16              ttyS7
+full                net                 ram6                tty18               tty37               tty56               ttyS17              ttyS8
+fuse                network_latency     ram7                tty19               tty38               tty57               ttyS18              ttyS9
+hpet                network_throughput  ram8                tty2                tty39               tty58               ttyS19              ttyprintk
+hwrng               null                ram9                tty20               tty4                tty59               ttyS2               uinput
+input               port                random              tty21               tty40               tty6                ttyS20              urandom
+kmsg                ppp                 rfkill              tty22               tty41               tty60               ttyS21              vcs
+lightnvm            psaux               root                tty23               tty42               tty61               ttyS22              vcs1
+log                 ptmx                rtc0                tty24               tty43               tty62               ttyS23              vcsa
+loop-control        pts                 shm                 tty25               tty44               tty63               ttyS24              vcsa1
+loop0               ram0                snapshot            tty26               tty45               tty7                ttyS25              vda
+loop1               ram1                tty                 tty27               tty46               tty8                ttyS26              vda1
+loop2               ram10               tty0                tty28               tty47               tty9                ttyS27              vda15
+loop3               ram11               tty1                tty29               tty48               ttyS0               ttyS28              vdb
+loop4               ram12               tty10               tty3                tty49               ttyS1               ttyS29              vga_arbiter
+loop5               ram13               tty11               tty30               tty5                ttyS10              ttyS3               zero
+loop6               ram14               tty12               tty31               tty50               ttyS11              ttyS30
+loop7               ram15               tty13               tty32               tty51               ttyS12              ttyS31
+$ volume vdb is added to inst02
+-sh: volume: not found
+$ still unformated
+-sh: still: not found
+$ sudo mkfs.ext3 /dev/vdb
+mke2fs 1.42.12 (29-Aug-2014)
+Creating filesystem with 262144 4k blocks and 65536 inodes
+Filesystem UUID: fa469533-4488-4428-8607-f65b97fa7577
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+$ sudo mkdir /mydisk
+$ sudo mount /dev/vdb /mydisk
+$ cd /mydisk/
+$ ls
+lost+found
+$ pwd
+/mydisk
+$ more lost\+found/
+more: lost+found/: Permission denied
+$ exit
+Connection to 172.24.4.32 closed.
+[pganapa2@localhost devstack]$ openstack volume back create --name backup1 vol1
+^CTraceback (most recent call last):
+  File "/bin/openstack", line 11, in <module>
+    sys.exit(main())
+  File "/usr/lib/python2.7/site-packages/openstackclient/shell.py", line 210, in main
+    return OpenStackShell().run(argv)
+  File "/usr/lib/python2.7/site-packages/osc_lib/shell.py", line 136, in run
+    ret_val = super(OpenStackShell, self).run(argv)
+  File "/usr/lib/python2.7/site-packages/cliff/app.py", line 264, in run
+    self.initialize_app(remainder)
+  File "/usr/lib/python2.7/site-packages/openstackclient/shell.py", line 134, in initialize_app
+    super(OpenStackShell, self).initialize_app(argv)
+  File "/usr/lib/python2.7/site-packages/osc_lib/shell.py", line 443, in initialize_app
+    self._load_plugins()
+  File "/usr/lib/python2.7/site-packages/openstackclient/shell.py", line 105, in _load_plugins
+    self.command_manager.add_command_group(cmd_group)
+  File "/usr/lib/python2.7/site-packages/openstackclient/common/commandmanager.py", line 41, in add_command_group
+    self.load_commands(group)
+  File "/usr/lib/python2.7/site-packages/openstackclient/common/commandmanager.py", line 36, in load_commands
+    return super(CommandManager, self).load_commands(namespace)
+  File "/usr/lib/python2.7/site-packages/cliff/commandmanager.py", line 61, in load_commands
+    for ep in pkg_resources.iter_entry_points(namespace):
+  File "/usr/lib/python2.7/site-packages/pkg_resources/__init__.py", line 656, in <genexpr>
+    for entry in dist.get_entry_map(group).values()
+  File "/usr/lib/python2.7/site-packages/pkg_resources/__init__.py", line 2797, in get_entry_map
+    try:
+KeyboardInterrupt
+^[[A[pganapa2@localhost devstack]$ openstack volume backup create --name backup1 vol1
+Invalid volume: Backing up an in-use volume must use the force flag. (HTTP 400) (Request-ID: req-ea1a790b-d57f-42d7-ba5c-4ed4c9ef2127)
+[pganapa2@localhost devstack]$ openstack volume backup create --name backup1 --force vol1
+Service cinder-backup could not be found. (HTTP 503) (Request-ID: req-d900176a-4395-40d1-82bf-65adcdfca093)
+[pganapa2@localhost devstack]$ cinder service-list
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+| Binary           | Host                              | Zone | Status  | State | Updated_at                 | Disabled Reason |
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+| cinder-scheduler | localhost.localdomain             | nova | enabled | up    | 2019-07-17T12:55:28.000000 | -               |
+| cinder-volume    | localhost.localdomain@lvmdriver-1 | nova | enabled | up    | 2019-07-17T12:55:21.000000 | -               |
++------------------+-----------------------------------+------+---------+-------+----------------------------+-----------------+
+[pganapa2@localhost devstack]$ cinder server-start cinder-backup
+usage: cinder [--version] [-d] [--service-type <service-type>]
+              [--service-name <service-name>]
+              [--volume-service-name <volume-service-name>]
+              [--os-endpoint-type <os-endpoint-type>]
+              [--os-volume-api-version <volume-api-ver>]
+              [--os-endpoint <os-endpoint>] [--retries <retries>]
+              [--profile HMAC_KEY] [--insecure] [--os-cacert <ca-certificate>]
+              [--os-cert <certificate>] [--os-key <key>] [--timeout <seconds>]
+              [--collect-timing] [--os-auth-type <name>]
+              [--os-auth-url OS_AUTH_URL] [--os-system-scope OS_SYSTEM_SCOPE]
+              [--os-domain-id OS_DOMAIN_ID] [--os-domain-name OS_DOMAIN_NAME]
+              [--os-project-id OS_PROJECT_ID]
+              [--os-project-name OS_PROJECT_NAME]
+              [--os-project-domain-id OS_PROJECT_DOMAIN_ID]
+              [--os-project-domain-name OS_PROJECT_DOMAIN_NAME]
+              [--os-trust-id OS_TRUST_ID]
+              [--os-default-domain-id OS_DEFAULT_DOMAIN_ID]
+              [--os-default-domain-name OS_DEFAULT_DOMAIN_NAME]
+              [--os-user-id OS_USER_ID] [--os-username OS_USERNAME]
+              [--os-user-domain-id OS_USER_DOMAIN_ID]
+              [--os-user-domain-name OS_USER_DOMAIN_NAME]
+              [--os-password OS_PASSWORD] [--os-auth-strategy <auth-strategy>]
+              [--os-token <token>] [--os-url <url>]
+              <subcommand> ...
+error: argument <subcommand>: invalid choice: u'server-start'
+Try 'cinder help ' for more information.
+[pganapa2@localhost devstack]$ openstack volume backup show backup1
+No volumebackup with a name or ID of 'backup1' exists.
+[pganapa2@localhost devstack]$ openstack volume backup list
+
+[pganapa2@localhost devstack]$ ^C
+[pganapa2@localhost devstack]$ openstack snapshot create --name snap1 --force vol1
+^Aopenstack: 'snapshot create --name snap1 --force vol1' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  endpoint add project
+  endpoint create
+  endpoint delete
+  endpoint group add project
+  endpoint group create
+  endpoint group delete
+  endpoint group list
+  endpoint group remove project
+  endpoint group set
+  endpoint group show
+  endpoint list
+  endpoint remove project
+  endpoint set
+  endpoint show
+[pganapa2@localhost devstack]$ openstack snapshot create --name snap1 --force vol1
+openstack: 'snapshot create --name snap1 --force vol1' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  endpoint add project
+  endpoint create
+  endpoint delete
+  endpoint group add project
+  endpoint group create
+  endpoint group delete
+  endpoint group list
+  endpoint group remove project
+  endpoint group set
+  endpoint group show
+  endpoint list
+  endpoint remove project
+  endpoint set
+  endpoint show
+[pganapa2@localhost devstack]$ [pganapa2@localhost devstack]$ clear
+
+
+##Swift commands
