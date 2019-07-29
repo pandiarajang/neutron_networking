@@ -4,10 +4,13 @@
     Openstack version: stein
     
     Network Project 01
-    ==============================================================================================44
+    ==============================================================================================
     
-    ![networkproject01_graph](networkproject01/networkproject01_graph.PNG)
-    ![networkproject01_topology](networkproject01/networkproject01_topology.PNG)
+    Horizon Graph:
+![networkproject01_graph](networkproject01/networkproject01_graph.PNG)
+
+    Horizon Topology:
+![networkproject01_topology](networkproject01/networkproject01_topology.PNG)
     
     
     Simple Network 
