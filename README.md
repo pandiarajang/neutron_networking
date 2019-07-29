@@ -3,7 +3,7 @@
     Installation package : devstack
     Openstack version: stein
     
-    Network Project 01
+    1) Network Project 01
     ==============================================================================================
     
     Horizon Graph:
@@ -13,7 +13,7 @@
 ![networkproject01_topology](networkproject01/networkproject01_topology.PNG)
     
     
-    Simple Network 
+    2) Simple Network 
     ==============================================================================================
     
     Objective: 
