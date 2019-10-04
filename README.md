@@ -2,6 +2,7 @@
   
     Installation package : devstack
     Openstack version: stein
+    Instruction: https://docs.openstack.org/devstack/latest/
     
     1) Network Project 01
     ==============================================================================================
