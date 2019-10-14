@@ -1,4 +1,5 @@
-[virtuora@u371 devstack]$ source openrc admin admin^C
+#Create project and User
+[virtuora@u371 devstack]$ source openrc admin admin
 [virtuora@u371 devstack]$ openstack project create project_kube
 +-------------+----------------------------------+
 | Field       | Value                            |
@@ -26,3 +27,203 @@
 | parent_id   | default                                    |
 | tags        | []                                         |
 +-------------+--------------------------------------------+
+[virtuora@u371 devstack]$ openstack user create --project project_kube --password-prompt paganapa
+User Password:xxx123
+Repeat User Password:xxx123
++---------------------+----------------------------------+
+| Field               | Value                            |
++---------------------+----------------------------------+
+| default_project_id  | c1ab99f585c1430a952a438a7174a8e5 |
+| domain_id           | default                          |
+| enabled             | True                             |
+| id                  | 11ef8d0b72f44de080e3c81201cbee30 |
+| name                | paganapa                         |
+| options             | {}                               |
+| password_expires_at | None                             |
++---------------------+----------------------------------+
+[virtuora@u371 devstack]$ openstack role list
++----------------------------------+---------------+
+| ID                               | Name          |
++----------------------------------+---------------+
+| 330abc2ac16b45aaaa6ff8bf1996e587 | admin         |
+| 37a10c3578cf4c92b92e56d496760fa5 | member        |
+| a6d3a789988842dba101b76ec9064f32 | reader        |
+| d21599855c074a008690db77de31733d | service       |
+| e8461d224668428ab6d6b2b6e3592d78 | ResellerAdmin |
+| f7fd61e5ef164a92b4aabdb50ff837cc | anotherrole   |
++----------------------------------+---------------+
+[virtuora@u371 devstack]$ openstack role assignment list --project project_kube --user paganapa
+
+[virtuora@u371 devstack]$ openstack role add --project project_kube --user paganapa member
+[virtuora@u371 devstack]$ openstack role add --project project_kube --user paganapa admin
+[virtuora@u371 devstack]$ openstack role assignment list --project project_kube --user paganapa
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| Role                             | User                             | Group | Project                          | Domain | System | Inherited |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+| 330abc2ac16b45aaaa6ff8bf1996e587 | 11ef8d0b72f44de080e3c81201cbee30 |       | c1ab99f585c1430a952a438a7174a8e5 |        |        | False     |
+| 37a10c3578cf4c92b92e56d496760fa5 | 11ef8d0b72f44de080e3c81201cbee30 |       | c1ab99f585c1430a952a438a7174a8e5 |        |        | False     |
++----------------------------------+----------------------------------+-------+----------------------------------+--------+--------+-----------+
+
+#Create network 
+[virtuora@u371 devstack]$ source openrc paganapa project_kube
+[virtuora@u371 devstack]$ openstack project list
++----------------------------------+--------------------+
+| ID                               | Name               |
++----------------------------------+--------------------+
+| 48aff7ba15e94041bfeeb09e024b4a19 | demo               |
+| 917bbeafb914450b8b7460bdbc8b9fea | service            |
+| 9beb02281fea45468b1b8dcf69383537 | admin              |
+| bbd0545d93c24f7f900072ac7264ddab | invisible_to_admin |
+| c1ab99f585c1430a952a438a7174a8e5 | project_kube       |
+| ea664eadb2cc4d72b2199447e9204aaf | alt_demo           |
++----------------------------------+--------------------+
+[virtuora@u371 devstack]$ openstack network create network_kube
++---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                     | Value                                                                                                                                                                                              |
++---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up            | UP                                                                                                                                                                                                 |
+| availability_zone_hints   |                                                                                                                                                                                                    |
+| availability_zones        |                                                                                                                                                                                                    |
+| created_at                | 2019-10-14T11:42:25Z                                                                                                                                                                               |
+| description               |                                                                                                                                                                                                    |
+| dns_domain                | None                                                                                                                                                                                               |
+| id                        | c287d9db-5adb-4a2d-b7ee-770dc6d33279                                                                                                                                                               |
+| ipv4_address_scope        | None                                                                                                                                                                                               |
+| ipv6_address_scope        | None                                                                                                                                                                                               |
+| is_default                | False                                                                                                                                                                                              |
+| is_vlan_transparent       | None                                                                                                                                                                                               |
+| location                  | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f585c1430a952a438a7174a8e5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| mtu                       | 1450                                                                                                                                                                                               |
+| name                      | network_kube                                                                                                                                                                                       |
+| port_security_enabled     | True                                                                                                                                                                                               |
+| project_id                | c1ab99f585c1430a952a438a7174a8e5                                                                                                                                                                   |
+| provider:network_type     | vxlan                                                                                                                                                                                              |
+| provider:physical_network | None                                                                                                                                                                                               |
+| provider:segmentation_id  | 5                                                                                                                                                                                                  |
+| qos_policy_id             | None                                                                                                                                                                                               |
+| revision_number           | 1                                                                                                                                                                                                  |
+| router:external           | Internal                                                                                                                                                                                           |
+| segments                  | None                                                                                                                                                                                               |
+| shared                    | False                                                                                                                                                                                              |
+| status                    | ACTIVE                                                                                                                                                                                             |
+| subnets                   |                                                                                                                                                                                                    |
+| tags                      |                                                                                                                                                                                                    |
+| updated_at                | 2019-10-14T11:42:25Z                                                                                                                                                                               |
++---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[virtuora@u371 devstack]$ openstack subnet list
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| ID                                   | Name                | Network                              | Subnet              |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+| 0079d07e-7344-4fe7-90ab-1edc2239604a | ipv6-private-subnet | 7d339383-e19f-489a-9539-a0562a24182f | fd38:51a4:292d::/64 |
+| 531f9d61-8845-4b57-8395-9c1cbb1408e4 | private-subnet      | 7d339383-e19f-489a-9539-a0562a24182f | 10.0.0.0/26         |
+| d780ff41-cce8-44b7-b972-cb29635ef8d0 | ipv6-public-subnet  | 5691ea02-c1a3-4cd6-9b43-e51258d11c5e | 2001:db8::/64       |
+| f529e9b4-7f38-4b9c-9c0c-1b514627ae34 | public-subnet       | 5691ea02-c1a3-4cd6-9b43-e51258d11c5e | 172.24.4.0/24       |
++--------------------------------------+---------------------+--------------------------------------+---------------------+
+[virtuora@u371 devstack]$ openstack subnet create subnet01_kube --subnet-range 10.5.5.0/24 --dns-nameserver 8.8.8.8 --network network_kube
++-------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                              |
++-------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 10.5.5.2-10.5.5.254                                                                                                                                                                                |
+| cidr              | 10.5.5.0/24                                                                                                                                                                                        |
+| created_at        | 2019-10-14T11:47:25Z                                                                                                                                                                               |
+| description       |                                                                                                                                                                                                    |
+| dns_nameservers   | 8.8.8.8                                                                                                                                                                                            |
+| enable_dhcp       | True                                                                                                                                                                                               |
+| gateway_ip        | 10.5.5.1                                                                                                                                                                                           |
+| host_routes       |                                                                                                                                                                                                    |
+| id                | 6583e2fe-c6aa-4e52-92f6-f6cd34d61952                                                                                                                                                               |
+| ip_version        | 4                                                                                                                                                                                                  |
+| ipv6_address_mode | None                                                                                                                                                                                               |
+| ipv6_ra_mode      | None                                                                                                                                                                                               |
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f585c1430a952a438a7174a8e5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | subnet01_kube                                                                                                                                                                                      |
+| network_id        | c287d9db-5adb-4a2d-b7ee-770dc6d33279                                                                                                                                                               |
+| prefix_length     | None                                                                                                                                                                                               |
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                                                                                                                                                   |
+| revision_number   | 0                                                                                                                                                                                                  |
+| segment_id        | None                                                                                                                                                                                               |
+| service_types     |                                                                                                                                                                                                    |
+| subnetpool_id     | None                                                                                                                                                                                               |
+| tags              |                                                                                                                                                                                                    |
+| updated_at        | 2019-10-14T11:47:25Z                                                                                                                                                                               |
++-------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[virtuora@u371 devstack]$ ip netns
+qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+qrouter-0e3a1f41-e067-4e29-86ff-e075a153a6a1
+qdhcp-7d339383-e19f-489a-9539-a0562a24182f
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-7d339383-e19f-489a-9539-a0562a24182f ping 10.5.5.2
+PING 10.5.5.2 (10.5.5.2) 56(84) bytes of data.
+^C
+--- 10.5.5.2 ping statistics ---
+8 packets transmitted, 0 received, 100% packet loss, time 6999ms
+
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping 10.5.5.2
+PING 10.5.5.2 (10.5.5.2) 56(84) bytes of data.
+64 bytes from 10.5.5.2: icmp_seq=1 ttl=64 time=0.043 ms
+64 bytes from 10.5.5.2: icmp_seq=2 ttl=64 time=0.049 ms
+64 bytes from 10.5.5.2: icmp_seq=3 ttl=64 time=0.037 ms
+64 bytes from 10.5.5.2: icmp_seq=4 ttl=64 time=0.046 ms
+64 bytes from 10.5.5.2: icmp_seq=5 ttl=64 time=0.048 ms
+^C
+--- 10.5.5.2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 3999ms
+rtt min/avg/max/mdev = 0.037/0.044/0.049/0.008 ms
+## qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 is subnet id for subnet01_kube
+[virtuora@u371 devstack]$ openstack network list
++--------------------------------------+--------------+----------------------------------------------------------------------------+
+| ID                                   | Name         | Subnets                                                                    |
++--------------------------------------+--------------+----------------------------------------------------------------------------+
+| 5691ea02-c1a3-4cd6-9b43-e51258d11c5e | public       | d780ff41-cce8-44b7-b972-cb29635ef8d0, f529e9b4-7f38-4b9c-9c0c-1b514627ae34 |
+| 7d339383-e19f-489a-9539-a0562a24182f | private      | 0079d07e-7344-4fe7-90ab-1edc2239604a, 531f9d61-8845-4b57-8395-9c1cbb1408e4 |
+| c287d9db-5adb-4a2d-b7ee-770dc6d33279 | network_kube | 6583e2fe-c6aa-4e52-92f6-f6cd34d61952                                       |
++--------------------------------------+--------------+----------------------------------------------------------------------------+
+[virtuora@u371 devstack]$ openstack router list
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| ID                                   | Name    | Status | State | Project                          | Distributed | HA    |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+| 0e3a1f41-e067-4e29-86ff-e075a153a6a1 | router1 | ACTIVE | UP    | 48aff7ba15e94041bfeeb09e024b4a19 | False       | False |
++--------------------------------------+---------+--------+-------+----------------------------------+-------------+-------+
+[virtuora@u371 devstack]$ openstack project show 48aff7ba15e94041bfeeb09e024b4a19
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description |                                  |
+| domain_id   | default                          |
+| enabled     | True                             |
+| id          | 48aff7ba15e94041bfeeb09e024b4a19 |
+| is_domain   | False                            |
+| name        | demo                             |
+| parent_id   | default                          |
+| tags        | []                               |
++-------------+----------------------------------+
+[virtuora@u371 devstack]$ openstack router create R01
++-------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                              |
++-------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                 |
+| availability_zone_hints |                                                                                                                                                                                                    |
+| availability_zones      |                                                                                                                                                                                                    |
+| created_at              | 2019-10-14T11:51:50Z                                                                                                                                                                               |
+| description             |                                                                                                                                                                                                    |
+| distributed             | False                                                                                                                                                                                              |
+| external_gateway_info   | None                                                                                                                                                                                               |
+| flavor_id               | None                                                                                                                                                                                               |
+| ha                      | False                                                                                                                                                                                              |
+| id                      | 6339ffb4-f750-4591-8228-e53a20433ed5                                                                                                                                                               |
+| location                | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f585c1430a952a438a7174a8e5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | R01                                                                                                                                                                                                |
+| project_id              | c1ab99f585c1430a952a438a7174a8e5                                                                                                                                                                   |
+| revision_number         | 1                                                                                                                                                                                                  |
+| routes                  |                                                                                                                                                                                                    |
+| status                  | ACTIVE                                                                                                                                                                                             |
+| tags                    |                                                                                                                                                                                                    |
+| updated_at              | 2019-10-14T11:51:50Z                                                                                                                                                                               |
++-------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[virtuora@u371 devstack]$ openstack router add subnet R01 subnet01_kube
+[virtuora@u371 devstack]$ neutron router-gateway-set R01 public
+neutron CLI is deprecated and will be removed in the future. Use openstack CLI instead.
+
+## Create images
+
+
+
