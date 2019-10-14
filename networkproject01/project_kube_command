@@ -1,0 +1,28 @@
+[virtuora@u371 devstack]$ source openrc admin admin^C
+[virtuora@u371 devstack]$ openstack project create project_kube
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description |                                  |
+| domain_id   | default                          |
+| enabled     | True                             |
+| id          | c1ab99f585c1430a952a438a7174a8e5 |
+| is_domain   | False                            |
+| name        | project_kube                     |
+| parent_id   | default                          |
+| tags        | []                               |
++-------------+----------------------------------+
+[virtuora@u371 devstack]$ openstack project set --description "Development set up for Kubernetes practice" project_kube
+[virtuora@u371 devstack]$ openstack project show project_kube
++-------------+--------------------------------------------+
+| Field       | Value                                      |
++-------------+--------------------------------------------+
+| description | Development set up for Kubernetes practice |
+| domain_id   | default                                    |
+| enabled     | True                                       |
+| id          | c1ab99f585c1430a952a438a7174a8e5           |
+| is_domain   | False                                      |
+| name        | project_kube                               |
+| parent_id   | default                                    |
+| tags        | []                                         |
++-------------+--------------------------------------------+
