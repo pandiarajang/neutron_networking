@@ -283,6 +283,7 @@ openstack server create: error: argument --flavor is required
 | volumes_attached                    |                                                                 |
 +-------------------------------------+-----------------------------------------------------------------+
 [pganapa2@localhost devstack]$ openstack keypair create mykeypair >>mykeypair.key
+#download images from https://docs.openstack.org/image-guide/obtain-images.html
 [pganapa2@localhost devstack]$ openstack server create --image cirros-0.4.0-x86_64-disk --flavor c1 --keypair mykeypair --nic net-id=b99435f3-d4fb-4f99-851e-5591f959def9 inst02
 usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
                                [-c COLUMN] [--max-width <integer>]
