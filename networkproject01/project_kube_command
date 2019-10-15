@@ -226,4 +226,4 @@ neutron CLI is deprecated and will be removed in the future. Use openstack CLI i
 ## Create images
 
 
-
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium --key-name mykeypair --nic net-id=8520891a-068b-48cb-80fa-55969344e26d inst03
