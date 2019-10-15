@@ -225,5 +225,756 @@ neutron CLI is deprecated and will be removed in the future. Use openstack CLI i
 
 ## Create images
 
+[virtuora@u371 devstack]$ openrc paganapa project_kube
+bash: openrc: command not found...
+[virtuora@u371 devstack]$ source openrc paganapa project_kube
+WARNING: setting legacy OS_TENANT_NAME to support cli tools.
+[virtuora@u371 devstack]$ openstack project list
++----------------------------------+--------------------+
+| ID                               | Name               |
++----------------------------------+--------------------+
+| 48aff7ba15e94041bfeeb09e024b4a19 | demo               |
+| 917bbeafb914450b8b7460bdbc8b9fea | service            |
+| 9beb02281fea45468b1b8dcf69383537 | admin              |
+| bbd0545d93c24f7f900072ac7264ddab | invisible_to_admin |
+| c1ab99f585c1430a952a438a7174a8e5 | project_kube       |
+| ea664eadb2cc4d72b2199447e9204aaf | alt_demo           |
++----------------------------------+--------------------+
+[virtuora@u371 devstack]$ openstack ^C
+[virtuora@u371 devstack]$ openstack image create --min-disk 2 --private --disk-format q
+[virtuora@u371 devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| ccd1bf69-b2cc-4fac-b524-ed4540afcd4e | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[virtuora@u371 devstack]$ openstack image create --
+--checksum          --fit-width         --min-disk          --project           --sign-
+--column            --force             --min-ram           --project-domain    --size
+--community         --format            --noindent          --property          --store
+--container-format  --help              --owner             --protected         --tag
+--copy-from         --id                --prefix            --public            --unpro
+--disk-format       --location          --print-empty       --shared            --varia
+--file              --max-width         --private           --sign-cert-id      --volum
+[virtuora@u371 devstack]$ openstack image create --min-disk
+accrc              FUTURE.rst         LICENSE            .prereqs           stackrc
+clean.sh           gate               .localrc.password  README.rst         stack.sh
+data               .git               .mailmap           roles              tests
+doc                .gitignore         MAINTAINERS.rst    run_tests.sh       tools
+extras.d           .gitreview         Makefile           samples            tox.ini
+files              HACKING.rst        openrc             setup.cfg          unstack.sh
+functions          inc                pkg                setup.py           userrc_earl
+functions-common   lib                playbooks          .stackenv          .zuul.yaml
+[virtuora@u371 devstack]$ openstack image create --min-disk
+accrc              FUTURE.rst         LICENSE            .prereqs           stackrc
+clean.sh           gate               .localrc.password  README.rst         stack.sh
+data               .git               .mailmap           roles              tests
+doc                .gitignore         MAINTAINERS.rst    run_tests.sh       tools
+extras.d           .gitreview         Makefile           samples            tox.ini
+files              HACKING.rst        openrc             setup.cfg          unstack.sh
+functions          inc                pkg                setup.py           userrc_earl
+functions-common   lib                playbooks          .stackenv          .zuul.yaml
+[virtuora@u371 devstack]$ openstack image create --min-disk ^C
+[virtuora@u371 devstack]$ openstack image create --min-disk 3 --private --disk-format r6-x86_64-GenericCloud-1907.raw Centos-6
++------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field            | Value                                                             
++------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------
+| checksum         | f8c16b8e751b6aba2422fbd618f6f6c9                                  
+| container_format | bare                                                              
+| created_at       | 2019-10-15T03:21:35Z                                              
+| disk_format      | raw                                                               
+| file             | /v2/images/edbe89ac-da0e-4533-9022-839c08f89344/file              
+| id               | edbe89ac-da0e-4533-9022-839c08f89344                              
+| min_disk         | 3                                                                 
+| min_ram          | 0                                                                 
+| name             | Centos-6                                                          
+| owner            | c1ab99f585c1430a952a438a7174a8e5                                  
+| properties       | os_hash_algo='sha512', os_hash_value='de595a5458a0b901db47c0d020c22ade5ac565df3b123c11c0bf956c6021eff450422232e534450226c56877edf3e74840cf4e51', os_hidde
+| protected        | False                                                             
+| schema           | /v2/schemas/image                                                 
+| size             | 8589934592                                                        
+| status           | active                                                            
+| tags             |                                                                   
+| updated_at       | 2019-10-15T03:23:35Z                                              
+| virtual_size     | None                                                              
+| visibility       | private                                                           
++------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ openstack image list
++--------------------------------------+--------------------------+--------+
+| ID                                   | Name                     | Status |
++--------------------------------------+--------------------------+--------+
+| edbe89ac-da0e-4533-9022-839c08f89344 | Centos-6                 | active |
+| ccd1bf69-b2cc-4fac-b524-ed4540afcd4e | cirros-0.4.0-x86_64-disk | active |
++--------------------------------------+--------------------------+--------+
+[virtuora@u371 devstack]$ openstack flavor list
++----+-----------+-------+------+-----------+-------+-----------+
+| ID | Name      |   RAM | Disk | Ephemeral | VCPUs | Is Public |
++----+-----------+-------+------+-----------+-------+-----------+
+| 1  | m1.tiny   |   512 |    1 |         0 |     1 | True      |
+| 2  | m1.small  |  2048 |   20 |         0 |     1 | True      |
+| 3  | m1.medium |  4096 |   40 |         0 |     2 | True      |
+| 4  | m1.large  |  8192 |   80 |         0 |     4 | True      |
+| 42 | m1.nano   |    64 |    1 |         0 |     1 | True      |
+| 5  | m1.xlarge | 16384 |  160 |         0 |     8 | True      |
+| 84 | m1.micro  |   128 |    1 |         0 |     1 | True      |
+| c1 | cirros256 |   256 |    1 |         0 |     1 | True      |
+| d1 | ds512M    |   512 |    5 |         0 |     1 | True      |
+| d2 | ds1G      |  1024 |   10 |         0 |     1 | True      |
+| d3 | ds2G      |  2048 |   10 |         0 |     2 | True      |
+| d4 | ds4G      |  4096 |   20 |         0 |     4 | True      |
++----+-----------+-------+------+-----------+-------+-----------+
+[virtuora@u371 devstack]$ openstack network list
++--------------------------------------+--------------+----------------------------------------------------+
+| ID                                   | Name         | Subnets                                            |
++--------------------------------------+--------------+----------------------------------------------------+
+| 5691ea02-c1a3-4cd6-9b43-e51258d11c5e | public       | d780ff41-cce8-44b7-b972-cb29635c-9c0c-1b514627ae34 |
+| 7d339383-e19f-489a-9539-a0562a24182f | private      | 0079d07e-7344-4fe7-90ab-1edc2237-8395-9c1cbb1408e4 |
+| c287d9db-5adb-4a2d-b7ee-770dc6d33279 | network_kube | 6583e2fe-c6aa-4e52-92f6-f6cd34d                    |
++--------------------------------------+--------------+----------------------------------------------------+
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --nic net-id=c287d9d33279 inst01
+usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
+                               [-c COLUMN] [--max-width <integer>]
+                               [--fit-width] [--print-empty] [--noindent]
+                               [--prefix PREFIX]
+                               (--image <image> | --image-property <key=value> | --volu
+                               --flavor <flavor>
+                               [--security-group <security-group>]
+                               [--key-name <key-name>]
+                               [--property <key=value>]
+                               [--file <dest-filename=source-filename>]
+                               [--user-data <user-data>]
+                               [--availability-zone <zone-name>]
+                               [--block-device-mapping <dev-name=mapping>]
+                               [--nic <net-id=net-uuid,v4-fixed-ip=ip-addr,v6-fixed-ip=d,auto,none>]
+                               [--network <network>] [--port <port>]
+                               [--hint <key=value>]
+                               [--config-drive <config-drive-volume>|True]
+                               [--min <count>] [--max <count>] [--wait]
+                               <server-name>
+openstack server create: error: argument --flavor is required
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium -b-4a2d-b7ee-770dc6d33279 inst01
++-------------------------------------+------------------------------------------------
+| Field                               | Value
++-------------------------------------+------------------------------------------------
+| OS-DCF:diskConfig                   | MANUAL
+| OS-EXT-AZ:availability_zone         |
+| OS-EXT-SRV-ATTR:host                | None
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None
+| OS-EXT-SRV-ATTR:instance_name       |
+| OS-EXT-STS:power_state              | NOSTATE
+| OS-EXT-STS:task_state               | scheduling
+| OS-EXT-STS:vm_state                 | building
+| OS-SRV-USG:launched_at              | None
+| OS-SRV-USG:terminated_at            | None
+| accessIPv4                          |
+| accessIPv6                          |
+| addresses                           |
+| adminPass                           | 397oc8KKfAMV
+| config_drive                        |
+| created                             | 2019-10-15T03:30:27Z
+| flavor                              | m1.medium (3)
+| hostId                              |
+| id                                  | bc8aadb7-abef-4f72-a371-48fabcf44558
+| image                               | Centos-6 (edbe89ac-da0e-4533-9022-839c08f89344)
+| key_name                            | None
+| name                                | inst01
+| progress                            | 0
+| project_id                          | c1ab99f585c1430a952a438a7174a8e5
+| properties                          |
+| security_groups                     | name='default'
+| status                              | BUILD
+| updated                             | 2019-10-15T03:30:28Z
+| user_id                             | 11ef8d0b72f44de080e3c81201cbee30
+| volumes_attached                    |
++-------------------------------------+------------------------------------------------
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ openstack keypair create mykeypair >>mykeypair.key
+[virtuora@u371 devstack]$ openstack server list
++--------------------------------------+--------+--------+----------+----------+-------
+| ID                                   | Name   | Status | Networks | Image    | Flavor
++--------------------------------------+--------+--------+----------+----------+-------
+| bc8aadb7-abef-4f72-a371-48fabcf44558 | inst01 | BUILD  |          | Centos-6 | m1.med
++--------------------------------------+--------+--------+----------+----------+-------
+[virtuora@u371 devstack]$ openstack server show bc8aadb7-abef-4f72-a371-48fabcf44558
++-------------------------------------+------------------------------------------------
+| Field                               | Value
++-------------------------------------+------------------------------------------------
+| OS-DCF:diskConfig                   | MANUAL
+| OS-EXT-AZ:availability_zone         | nova
+| OS-EXT-SRV-ATTR:host                | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:hypervisor_hostname | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000001
+| OS-EXT-STS:power_state              | NOSTATE
+| OS-EXT-STS:task_state               | spawning
+| OS-EXT-STS:vm_state                 | building
+| OS-SRV-USG:launched_at              | None
+| OS-SRV-USG:terminated_at            | None
+| accessIPv4                          |
+| accessIPv6                          |
+| addresses                           |
+| config_drive                        |
+| created                             | 2019-10-15T03:30:27Z
+| flavor                              | m1.medium (3)
+| hostId                              | 7005d06543d9127f54e6a7422c14838f35fe5ee6b5ac9e8
+| id                                  | bc8aadb7-abef-4f72-a371-48fabcf44558
+| image                               | Centos-6 (edbe89ac-da0e-4533-9022-839c08f89344)
+| key_name                            | None
+| name                                | inst01
+| progress                            | 0
+| project_id                          | c1ab99f585c1430a952a438a7174a8e5
+| properties                          |
+| security_groups                     | name='default'
+| status                              | BUILD
+| updated                             | 2019-10-15T03:30:29Z
+| user_id                             | 11ef8d0b72f44de080e3c81201cbee30
+| volumes_attached                    |
++-------------------------------------+------------------------------------------------
+[virtuora@u371 devstack]$ openstack server show bc8aadb7-abef-4f72-a371-48fabcf44558
++-------------------------------------+------------------------------------------------
+| Field                               | Value
++-------------------------------------+------------------------------------------------
+| OS-DCF:diskConfig                   | MANUAL
+| OS-EXT-AZ:availability_zone         | nova
+| OS-EXT-SRV-ATTR:host                | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:hypervisor_hostname | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000001
+| OS-EXT-STS:power_state              | NOSTATE
+| OS-EXT-STS:task_state               | spawning
+| OS-EXT-STS:vm_state                 | building
+| OS-SRV-USG:launched_at              | None
+| OS-SRV-USG:terminated_at            | None
+| accessIPv4                          |
+| accessIPv6                          |
+| addresses                           |
+| config_drive                        |
+| created                             | 2019-10-15T03:30:27Z
+| flavor                              | m1.medium (3)
+| hostId                              | 7005d06543d9127f54e6a7422c14838f35fe5ee6b5ac9e8
+| id                                  | bc8aadb7-abef-4f72-a371-48fabcf44558
+| image                               | Centos-6 (edbe89ac-da0e-4533-9022-839c08f89344)
+| key_name                            | None
+| name                                | inst01
+| progress                            | 0
+| project_id                          | c1ab99f585c1430a952a438a7174a8e5
+| properties                          |
+| security_groups                     | name='default'
+| status                              | BUILD
+| updated                             | 2019-10-15T03:30:29Z
+| user_id                             | 11ef8d0b72f44de080e3c81201cbee30
+| volumes_attached                    |
++-------------------------------------+------------------------------------------------
+[virtuora@u371 devstack]$ openstack server show bc8aadb7-abef-4f72-a371-48fabcf44558
++-------------------------------------+------------------------------------------------
+| Field                               | Value
++-------------------------------------+------------------------------------------------
+| OS-DCF:diskConfig                   | MANUAL
+| OS-EXT-AZ:availability_zone         | nova
+| OS-EXT-SRV-ATTR:host                | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:hypervisor_hostname | u371.nms.fnc.fujitsu.com
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000001
+| OS-EXT-STS:power_state              | NOSTATE
+| OS-EXT-STS:task_state               | spawning
+| OS-EXT-STS:vm_state                 | building
+| OS-SRV-USG:launched_at              | None
+| OS-SRV-USG:terminated_at            | None
+| accessIPv4                          |
+| accessIPv6                          |
+| addresses                           |
+| config_drive                        |
+| created                             | 2019-10-15T03:30:27Z
+| flavor                              | m1.medium (3)
+| hostId                              | 7005d06543d9127f54e6a7422c14838f35fe5ee6b5ac9e8
+| id                                  | bc8aadb7-abef-4f72-a371-48fabcf44558
+| image                               | Centos-6 (edbe89ac-da0e-4533-9022-839c08f89344)
+| key_name                            | None
+| name                                | inst01
+| progress                            | 0
+| project_id                          | c1ab99f585c1430a952a438a7174a8e5
+| properties                          |
+| security_groups                     | name='default'
+| status                              | BUILD
+| updated                             | 2019-10-15T03:30:29Z
+| user_id                             | 11ef8d0b72f44de080e3c81201cbee30
+| volumes_attached                    |
++-------------------------------------+------------------------------------------------
+[virtuora@u371 devstack]$ openstack security group list
++--------------------------------------+---------+------------------------+-----------------+
+| ID                                   | Name    | Description            | Project    Tags |
++--------------------------------------+---------+------------------------+-----------------+
+| 15ccba80-1fa8-48a4-a186-5274caea6807 | default | Default security group | c1ab99f585c[]   |
+| 3c276cd3-5aad-4e8a-aa57-d4e2d8ebe08d | default | Default security group | 9beb02281fe[]   |
+| 4bef9598-284a-49ae-a356-d040fd21e120 | default | Default security group |            []   |
+| fada4b35-a59f-480f-842c-92ff1f7fae1e | default | Default security group | 48aff7ba15e[]   |
++--------------------------------------+---------+------------------------+-----------------+
+[virtuora@u371 devstack]$ openstack project list
++----------------------------------+--------------------+
+| ID                               | Name               |
++----------------------------------+--------------------+
+| 48aff7ba15e94041bfeeb09e024b4a19 | demo               |
+| 917bbeafb914450b8b7460bdbc8b9fea | service            |
+| 9beb02281fea45468b1b8dcf69383537 | admin              |
+| bbd0545d93c24f7f900072ac7264ddab | invisible_to_admin |
+| c1ab99f585c1430a952a438a7174a8e5 | project_kube       |
+| ea664eadb2cc4d72b2199447e9204aaf | alt_demo           |
++----------------------------------+--------------------+
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --procba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field             | Value                                                            
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| created_at        | 2019-10-15T03:48:08Z                                             
+| description       |                                                                  
+| direction         | ingress                                                          
+| ether_type        | IPv4                                                             
+| id                | 931025b8-6658-41f1-8186-bd727e20803f                             
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOn
+| name              | None                                                             
+| port_range_max    | None                                                             
+| port_range_min    | None                                                             
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                 
+| protocol          | icmp                                                             
+| remote_group_id   | None                                                             
+| remote_ip_prefix  | 0.0.0.0/0                                                        
+| revision_number   | 0                                                                
+| security_group_id | 15ccba80-1fa8-48a4-a186-5274caea6807                             
+| tags              | []                                                               
+| updated_at        | 2019-10-15T03:48:08Z                                             
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dst--ingress 15ccba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field             | Value                                                            
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| created_at        | 2019-10-15T03:49:24Z                                             
+| description       |                                                                  
+| direction         | ingress                                                          
+| ether_type        | IPv4                                                             
+| id                | 4388a499-91ac-48d0-97b8-766cc8826d58                             
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOn
+| name              | None                                                             
+| port_range_max    | 22                                                               
+| port_range_min    | 22                                                               
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                 
+| protocol          | tcp                                                              
+| remote_group_id   | None                                                             
+| remote_ip_prefix  | 0.0.0.0/0                                                        
+| revision_number   | 0                                                                
+| security_group_id | 15ccba80-1fa8-48a4-a186-5274caea6807                             
+| tags              | []                                                               
+| updated_at        | 2019-10-15T03:49:24Z                                             
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dst--ingress 15ccba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field             | Value                                                            
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| created_at        | 2019-10-15T03:49:31Z                                             
+| description       |                                                                  
+| direction         | ingress                                                          
+| ether_type        | IPv4                                                             
+| id                | 9e34ce4b-1edd-442e-aa0a-75888480bdd4                             
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOn
+| name              | None                                                             
+| port_range_max    | 80                                                               
+| port_range_min    | 80                                                               
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                 
+| protocol          | tcp                                                              
+| remote_group_id   | None                                                             
+| remote_ip_prefix  | 0.0.0.0/0                                                        
+| revision_number   | 0                                                                
+| security_group_id | 15ccba80-1fa8-48a4-a186-5274caea6807                             
+| tags              | []                                                               
+| updated_at        | 2019-10-15T03:49:31Z                                             
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dstp --ingress 15ccba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field             | Value                                                            
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| created_at        | 2019-10-15T03:49:37Z                                             
+| description       |                                                                  
+| direction         | ingress                                                          
+| ether_type        | IPv4                                                             
+| id                | a7648e0f-7258-4dc6-b2ca-8525a36f6e96                             
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOn
+| name              | None                                                             
+| port_range_max    | 8080                                                             
+| port_range_min    | 8080                                                             
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                 
+| protocol          | tcp                                                              
+| remote_group_id   | None                                                             
+| remote_ip_prefix  | 0.0.0.0/0                                                        
+| revision_number   | 0                                                                
+| security_group_id | 15ccba80-1fa8-48a4-a186-5274caea6807                             
+| tags              | []                                                               
+| updated_at        | 2019-10-15T03:49:37Z                                             
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dstp --ingress 15ccba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Field             | Value                                                            
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| created_at        | 2019-10-15T03:49:42Z                                             
+| description       |                                                                  
+| direction         | ingress                                                          
+| ether_type        | IPv4                                                             
+| id                | 924a10a7-805c-487b-85ba-d0852e8810fe                             
+| location          | Munch({'project': Munch({'domain_id': 'default', 'id': u'c1ab99f5', 'name': 'project_kube', 'domain_name': None}), 'cloud': '', 'region_name': 'RegionOn
+| name              | None                                                             
+| port_range_max    | 8443                                                             
+| port_range_min    | 8443                                                             
+| project_id        | c1ab99f585c1430a952a438a7174a8e5                                 
+| protocol          | tcp                                                              
+| remote_group_id   | None                                                             
+| remote_ip_prefix  | 0.0.0.0/0                                                        
+| revision_number   | 0                                                                
+| security_group_id | 15ccba80-1fa8-48a4-a186-5274caea6807                             
+| tags              | []                                                               
+| updated_at        | 2019-10-15T03:49:42Z                                             
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ sudo ip netns
+qrouter-6339ffb4-f750-4591-8228-e53a20433ed5
+qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+qrouter-0e3a1f41-e067-4e29-86ff-e075a153a6a1
+qdhcp-7d339383-e19f-489a-9539-a0562a24182f
+[virtuora@u371 devstack]$ ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping
+setting the network namespace "qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279" failed: Oper
+[virtuora@u371 devstack]$ sudo ip netns qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping
+Command "qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279" is unknown, try "ip netns help".
+[virtuora@u371 devstack]$ ip netns qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping 10.5
+Command "qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279" is unknown, try "ip netns help".
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+PING 10.5.5.137 (10.5.5.137) 56(84) bytes of data.
+64 bytes from 10.5.5.137: icmp_seq=1 ttl=64 time=6.77 ms
+64 bytes from 10.5.5.137: icmp_seq=2 ttl=64 time=1.16 ms
+64 bytes from 10.5.5.137: icmp_seq=3 ttl=64 time=0.712 ms
+64 bytes from 10.5.5.137: icmp_seq=4 ttl=64 time=0.683 ms
+64 bytes from 10.5.5.137: icmp_seq=5 ttl=64 time=0.663 ms
+^C
+--- 10.5.5.137 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4003ms
+rtt min/avg/max/mdev = 0.663/2.000/6.774/2.394 ms
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+The authenticity of host '10.5.5.137 (10.5.5.137)' can't be established.
+RSA key fingerprint is SHA256:SRt7nfZCrQStAFODebJWlr3/fGL3dS7uFAmbQACniMw.
+RSA key fingerprint is MD5:f6:5f:d3:e9:2f:05:cc:80:cd:83:07:a1:f2:60:0f:08.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.5.5.137' (RSA) to the list of known hosts.
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$
+[virtuora@u371 devstack]$
+[virtuora@u371 devstack]$ openstack keypair create mykeypair >>mykeypair.key
+Key pair 'mykeypair' already exists. (HTTP 409) (Request-ID: req-9792d741-8628-4ebc-924
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium - net-id=c287d9db-5adb-4a2d-b7ee-770dc6d33279 inst02
+usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
+                               [-c COLUMN] [--max-width <integer>]
+                               [--fit-width] [--print-empty] [--noindent]
+                               [--prefix PREFIX]
+                               (--image <image> | --image-property <key=value> | --volu
+                               --flavor <flavor>
+                               [--security-group <security-group>]
+                               [--key-name <key-name>]
+                               [--property <key=value>]
+                               [--file <dest-filename=source-filename>]
+                               [--user-data <user-data>]
+                               [--availability-zone <zone-name>]
+                               [--block-device-mapping <dev-name=mapping>]
+                               [--nic <net-id=net-uuid,v4-fixed-ip=ip-addr,v6-fixed-ip=d,auto,none>]
+                               [--network <network>] [--port <port>]
+                               [--hint <key=value>]
+                               [--config-drive <config-drive-volume>|True]
+                               [--min <count>] [--max <count>] [--wait]
+                               <server-name>
+openstack server create: error: unrecognized arguments: --keypair inst02
+[virtuora@u371 devstack]$
+[virtuora@u371 devstack]$ ^Censtack server create --image Centos-6 --flavor m1.medium - net-id=c287d9db-5adb-4a2d-b7ee-770dc6d33279 inst02
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium -c net-id=c287d9db-5adb-4a2d-b7ee-770dc6d33279 inst02
++-------------------------------------+------------------------------------------------
+| Field                               | Value
++-------------------------------------+------------------------------------------------
+| OS-DCF:diskConfig                   | MANUAL
+| OS-EXT-AZ:availability_zone         |
+| OS-EXT-SRV-ATTR:host                | None
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None
+| OS-EXT-SRV-ATTR:instance_name       |
+| OS-EXT-STS:power_state              | NOSTATE
+| OS-EXT-STS:task_state               | scheduling
+| OS-EXT-STS:vm_state                 | building
+| OS-SRV-USG:launched_at              | None
+| OS-SRV-USG:terminated_at            | None
+| accessIPv4                          |
+| accessIPv6                          |
+| addresses                           |
+| adminPass                           | U4j5wxVaMcWL
+| config_drive                        |
+| created                             | 2019-10-15T03:57:34Z
+| flavor                              | m1.medium (3)
+| hostId                              |
+| id                                  | 850ca50f-ad53-4093-b7d2-ed342eb8a588
+| image                               | Centos-6 (edbe89ac-da0e-4533-9022-839c08f89344)
+| key_name                            | mykeypair
+| name                                | inst02
+| progress                            | 0
+| project_id                          | c1ab99f585c1430a952a438a7174a8e5
+| properties                          |
+| security_groups                     | name='default'
+| status                              | BUILD
+| updated                             | 2019-10-15T03:57:34Z
+| user_id                             | 11ef8d0b72f44de080e3c81201cbee30
+| volumes_attached                    |
++-------------------------------------+------------------------------------------------
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: No route to host
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: Connection refused
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: Connection refused
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: Connection refused
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium - net-id=c287d9db-5adb-4a2d-b7ee-770dc6d33279 inst02^C
+[virtuora@u371 devstack]$ openstack server list
++--------------------------------------+--------+--------+-------------------------+---
+| ID                                   | Name   | Status | Networks                | Im
++--------------------------------------+--------+--------+-------------------------+---
+| 850ca50f-ad53-4093-b7d2-ed342eb8a588 | inst02 | ACTIVE | network_kube=10.5.5.26  | Ce
+| bc8aadb7-abef-4f72-a371-48fabcf44558 | inst01 | ACTIVE | network_kube=10.5.5.137 | Ce
++--------------------------------------+--------+--------+-------------------------+---
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --procba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
+Error while executing command: ConflictException: 409, Security group rule already exis6658-41f1-8186-bd727e20803f.
+[virtuora@u371 devstack]$ openstack security group rule create --src-ip 0.0.0.0/0 --dst--ingress 15ccba80-1fa8-48a4-a186-5274caea6807
+The --src-ip option is deprecated, please use --remote-ip instead.
+Error while executing command: ConflictException: 409, Security group rule already exis91ac-48d0-97b8-766cc8826d58.
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: Connection refused
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+ssh: connect to host 10.5.5.26 port 22: Connection refused
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+The authenticity of host '10.5.5.26 (10.5.5.26)' can't be established.
+RSA key fingerprint is SHA256:PqRzy1nwQA6hItfH2kYTi2/YRmGjDOZpL2vAYa/+WrE.
+RSA key fingerprint is MD5:66:ce:46:28:52:fd:a3:94:95:03:60:7d:02:5d:20:86.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.5.5.26' (RSA) to the list of known hosts.
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+[virtuora@u371 devstack]$ ls -lrt
+total 284
+-rw-rw-r--.  1 virtuora virtuora  3774 Oct 11 03:52 FUTURE.rst
+-rw-rw-r--.  1 virtuora virtuora  2490 Oct 11 03:52 Makefile
+-rw-rw-r--.  1 virtuora virtuora  1506 Oct 11 03:52 MAINTAINERS.rst
+-rw-rw-r--.  1 virtuora virtuora 10143 Oct 11 03:52 LICENSE
+drwxrwxr-x.  2 virtuora virtuora    45 Oct 11 03:52 data
+drwxrwxr-x.  2 virtuora virtuora    42 Oct 11 03:52 extras.d
+drwxrwxr-x.  2 virtuora virtuora    22 Oct 11 03:52 gate
+drwxrwxr-x. 17 virtuora virtuora  4096 Oct 11 03:52 roles
+-rwxrwxr-x.  1 virtuora virtuora   781 Oct 11 03:52 setup.py
+-rwxrwxr-x.  1 virtuora virtuora  1188 Oct 11 03:52 run_tests.sh
+-rwxrwxr-x.  1 virtuora virtuora  3955 Oct 11 03:52 unstack.sh
+-rw-rw-r--.  1 virtuora virtuora  3936 Oct 11 03:52 README.rst
+-rw-rw-r--.  1 virtuora virtuora 12037 Oct 11 03:52 HACKING.rst
+drwxrwxr-x.  3 virtuora virtuora    42 Oct 11 03:52 doc
+-rwxrwxr-x.  1 virtuora virtuora  3630 Oct 11 03:52 clean.sh
+-rw-rw-r--.  1 virtuora virtuora 73228 Oct 11 03:52 functions-common
+-rw-rw-r--.  1 virtuora virtuora 31716 Oct 11 03:52 functions
+drwxrwxr-x.  2 virtuora virtuora    69 Oct 11 03:52 inc
+drwxrwxr-x.  4 virtuora virtuora    84 Oct 11 03:52 playbooks
+drwxrwxr-x.  2 virtuora virtuora    29 Oct 11 03:52 pkg
+-rw-rw-r--.  1 virtuora virtuora  4054 Oct 11 03:52 openrc
+-rw-rw-r--.  1 virtuora virtuora   505 Oct 11 03:52 setup.cfg
+drwxrwxr-x.  2 virtuora virtuora  4096 Oct 11 03:52 tests
+-rwxrwxr-x.  1 virtuora virtuora 44844 Oct 11 03:52 stack.sh
+-rw-rw-r--.  1 virtuora virtuora  1616 Oct 11 03:52 tox.ini
+drwxrwxr-x.  4 virtuora virtuora  4096 Oct 11 03:52 tools
+drwxrwxr-x.  9 virtuora virtuora  4096 Oct 11 04:13 files
+-rw-rw-r--.  1 virtuora virtuora 38269 Oct 13 21:59 stackrc
+drwxrwxr-x.  2 virtuora virtuora    38 Oct 13 23:28 samples
+drwxrwxr-x.  7 virtuora virtuora  4096 Oct 14 01:45 lib
+-rw-r--r--.  1 virtuora virtuora   399 Oct 14 01:47 userrc_early
+drwxr-xr-x.  6 virtuora virtuora    69 Oct 14 01:58 accrc
+-rw-rw-r--.  1 virtuora virtuora  1680 Oct 14 20:30 mykeypair.key
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279ntos@10.5.5.26
+[centos@inst02 ~]$
+[centos@inst02 ~]$
+[centos@inst02 ~]$
+[centos@inst02 ~]$
+[centos@inst02 ~]$
+[centos@inst02 ~]$ ^C
+[centos@inst02 ~]$ su - root
+Password:
+su: incorrect password
+[centos@inst02 ~]$ su - root
+Password:
+su: incorrect password
+[centos@inst02 ~]$ sudo list /root
+sudo: list: command not found
+[centos@inst02 ~]$ sudo pwd
+/home/centos
+[centos@inst02 ~]$ pwd
+/home/centos
+[centos@inst02 ~]$ clear
+[centos@inst02 ~]$ exit
+logout
+Connection to 10.5.5.26 closed.
+[virtuora@u371 devstack]$ ping 172.24.4.99
+PING 172.24.4.99 (172.24.4.99) 56(84) bytes of data.
+64 bytes from 172.24.4.99: icmp_seq=1 ttl=63 time=1.41 ms
+64 bytes from 172.24.4.99: icmp_seq=2 ttl=63 time=1.03 ms
+^C
+--- 172.24.4.99 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.038/1.225/1.412/0.187 ms
+[virtuora@u371 devstack]$ ssh -i mykeypair.key centos@172.24.4.99
+ssh: connect to host 172.24.4.99 port 22: Connection refused
+[virtuora@u371 devstack]$ ssh -i mykeypair.key centos@172.24.4.94
+The authenticity of host '172.24.4.94 (172.24.4.94)' can't be established.
+RSA key fingerprint is SHA256:PqRzy1nwQA6hItfH2kYTi2/YRmGjDOZpL2vAYa/+WrE.
+RSA key fingerprint is MD5:66:ce:46:28:52:fd:a3:94:95:03:60:7d:02:5d:20:86.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.24.4.94' (RSA) to the list of known hosts.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0664 for 'mykeypair.key' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "mykeypair.key": bad permissions
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ ssh -i mykeypair.key centos@172.24.4.99
+The authenticity of host '172.24.4.99 (172.24.4.99)' can't be established.
+RSA key fingerprint is SHA256:mm+CUI5ToIP8ppuyHJdoBuwV7+vIz0vafOuot/ku8vo.
+RSA key fingerprint is MD5:40:95:9d:1a:0a:88:c6:75:46:3d:15:16:d5:eb:68:ae.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.24.4.99' (RSA) to the list of known hosts.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0664 for 'mykeypair.key' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "mykeypair.key": bad permissions
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[virtuora@u371 devstack]$ ls -lrt mykeypair.key
+-rw-rw-r--. 1 virtuora virtuora 1680 Oct 14 20:30 mykeypair.key
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ chmod 700 mykeypair.key
+[virtuora@u371 devstack]$ ^C
+[virtuora@u371 devstack]$ ssh -i mykeypair.key centos@172.24.4.99
+[centos@inst01 ~]$
+[centos@inst01 ~]$
+[centos@inst01 ~]$ pwd
+/home/centos
+[centos@inst01 ~]$ cd /etc/yum/
+[centos@inst01 yum]$ pwd
+/etc/yum
+[centos@inst01 yum]$ ls
+pluginconf.d  protected.d  vars  version-groups.conf
+[centos@inst01 yum]$ cd ../
+[centos@inst01 etc]$ pwd
+/etc
+[centos@inst01 etc]$ cd yum.
+yum.conf     yum.repos.d/
+[centos@inst01 etc]$ cd yum.
+yum.conf     yum.repos.d/
+[centos@inst01 etc]$ cd yum.
+yum.conf     yum.repos.d/
+[centos@inst01 etc]$ cd yum.repos.d/
+[centos@inst01 yum.repos.d]$ ls
+CentOS-Base.repo  CentOS-Debuginfo.repo  CentOS-fasttrack.repo  CentOS-Media.repo  Cent
+[centos@inst01 yum.repos.d]$ git status
+-bash: git: command not found
+[centos@inst01 yum.repos.d]$ sudo yum -y update
+Loaded plugins: fastestmirror, presto
+Setting up Update Process
+Could not retrieve mirrorlist http://mirrorlist.centos.org/?release=6&arch=x86_64&repo=
+14: PYCURL ERROR 6 - "Couldn't resolve host 'mirrorlist.centos.org'"
+Error: Cannot retrieve repository metadata (repomd.xml) for repository: base. Please veain
+[centos@inst01 yum.repos.d]$ ping google.com
+ping: unknown host google.com
+[centos@inst01 yum.repos.d]$ ipconfig
+-bash: ipconfig: command not found
+[centos@inst01 yum.repos.d]$ ifconfig
+eth0      Link encap:Ethernet  HWaddr FA:16:3E:D7:3C:70
+          inet addr:10.5.5.180  Bcast:10.5.5.255  Mask:255.255.255.0
+          inet6 addr: fe80::f816:3eff:fed7:3c70/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1450  Metric:1
+          RX packets:451 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:415 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:50176 (49.0 KiB)  TX bytes:46416 (45.3 KiB)
 
-[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium --key-name mykeypair --nic net-id=8520891a-068b-48cb-80fa-55969344e26d inst03
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[centos@inst01 yum.repos.d]$ exit
+logout
+Connection to 172.24.4.99 closed.
+[virtuora@u371 devstack]$ chmod 700 mykeypair.key^C
+[virtuora@u371 devstack]$ sudo ip netns
+qrouter-41cb1e3c-f28d-47c3-9ccb-92de7aea170b
+qdhcp-8520891a-068b-48cb-80fa-55969344e26d
+qrouter-6339ffb4-f750-4591-8228-e53a20433ed5
+qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+qrouter-0e3a1f41-e067-4e29-86ff-e075a153a6a1
+qdhcp-7d339383-e19f-489a-9539-a0562a24182f
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-8520891a-068b-48cb-80fa-55969344e26d
+PING 10.0.0.108 (10.0.0.108) 56(84) bytes of data.
+From 10.0.0.66 icmp_seq=1 Destination Host Unreachable
+From 10.0.0.66 icmp_seq=2 Destination Host Unreachable
+From 10.0.0.66 icmp_seq=3 Destination Host Unreachable
+From 10.0.0.66 icmp_seq=4 Destination Host Unreachable
+^C
+--- 10.0.0.108 ping statistics ---
+6 packets transmitted, 0 received, +4 errors, 100% packet loss, time 5000ms
+pipe 4
+[virtuora@u371 devstack]$ ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 10.0
+setting the network namespace "qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279" failed: Oper
+[virtuora@u371 devstack]$ ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping
+setting the network namespace "qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279" failed: Oper
+[virtuora@u371 devstack]$ sudo ip netns
+qrouter-41cb1e3c-f28d-47c3-9ccb-92de7aea170b
+qdhcp-8520891a-068b-48cb-80fa-55969344e26d
+qrouter-6339ffb4-f750-4591-8228-e53a20433ed5
+qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+qrouter-0e3a1f41-e067-4e29-86ff-e075a153a6a1
+qdhcp-7d339383-e19f-489a-9539-a0562a24182f
+[virtuora@u371 devstack]$ ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279 ping
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-c287d9db-5adb-4a2d-b7ee-770dc6d33279
+PING 10.0.0.108 (10.0.0.108) 56(84) bytes of data.
+^C
+--- 10.0.0.108 ping statistics ---
+19 packets transmitted, 0 received, 100% packet loss, time 18000ms
+
+[virtuora@u371 devstack]$ sudo ip netns exec qdhcp-7d339383-e19f-489a-9539-a0562a24182f
+PING 10.0.0.108 (10.0.0.108) 56(84) bytes of data.
+^C
+--- 10.0.0.108 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+
+[virtuora@u371 devstack]$ ssh -i mykeypair.key centos@172.24.4.99
+Last login: Tue Oct 15 04:47:13 2019 from 172.24.4.1
+[centos@inst01 ~]$ ping google.com
+
+#[virtuora@u371 devstack]$ openstack server create --image Centos-6 --flavor m1.medium --key-name mykeypair --nic net-id=8520891a-068b-48cb-80fa-55969344e26d inst03
