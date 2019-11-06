@@ -275,7 +275,7 @@ files              HACKING.rst        openrc             setup.cfg          unst
 functions          inc                pkg                setup.py           userrc_earl
 functions-common   lib                playbooks          .stackenv          .zuul.yaml
 [virtuora@u371 devstack]$ openstack image create --min-disk ^C
-[virtuora@u371 devstack]$ openstack image create --min-disk 3 --private --disk-format r6-x86_64-GenericCloud-1907.raw Centos-6
+[virtuora@u371 devstack]$ openstack image create --min-disk 3 --private --disk-format raw --file  CentOS-6-x86_64-GenericCloud-1907.raw Centos-6
 +------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------
 | Field            | Value                                                             
 +------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------
