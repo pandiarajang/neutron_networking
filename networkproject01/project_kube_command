@@ -332,7 +332,7 @@ functions-common   lib                playbooks          .stackenv          .zuu
 | 7d339383-e19f-489a-9539-a0562a24182f | private      | 0079d07e-7344-4fe7-90ab-1edc2237-8395-9c1cbb1408e4 |
 | c287d9db-5adb-4a2d-b7ee-770dc6d33279 | network_kube | 6583e2fe-c6aa-4e52-92f6-f6cd34d                    |
 +--------------------------------------+--------------+----------------------------------------------------+
-[virtuora@u371 devstack]$ openstack server create --image Centos-6 --nic net-id=c287d9d33279 inst01
+[virtuora@u371 devstack]$ openstack server create --image Centos-6 --nic net-id=c287d9db-5adb-4a2d-b7ee-770dc6d33279 inst01
 usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
                                [-c COLUMN] [--max-width <integer>]
                                [--fit-width] [--print-empty] [--noindent]
